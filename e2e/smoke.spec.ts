@@ -44,12 +44,43 @@ test.describe("ontology stage (desktop)", () => {
     await expect(page.getByTestId("triples")).toHaveText(String(EDGES.length), { timeout: 15_000 });
     await page.evaluate(() => (window as unknown as { __open: (id: string) => void }).__open("illustration"));
     const images = page.locator(".gallery img");
-    await expect(images).toHaveCount(3);
+    await expect(images).toHaveCount(16);
     for (const img of await images.all()) {
       await expect
         .poll(() => img.evaluate((el) => (el as HTMLImageElement).naturalWidth))
         .toBeGreaterThan(0);
     }
+  });
+});
+
+test("full profile opens from the always-visible CTA and links into entities", async ({ page }) => {
+  await page.goto("/en");
+  await page.getByTestId("profile-cta").click();
+
+  const profile = page.locator(".entity.profile.open");
+  await expect(profile).toBeVisible();
+  await expect(profile).toContainText("Takahiro Fujii");
+  await expect(profile).toContainText("Career");
+  await expect(profile).toContainText("WealthPark");
+
+  // profile entries link into the entity panels
+  await profile.locator(".p-entry").first().click();
+  await expect(page.locator(".entity.profile.open")).toHaveCount(0);
+  await expect(page.locator(".entity.open .e-uri")).toHaveText(":wealthpark");
+});
+
+test.describe("japanese locale", () => {
+  test.use({ locale: "ja-JP" });
+
+  test("renders localized UI text", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.getByTestId("profile-cta")).toContainText("プロフィール全文");
+    await expect(page.locator(".rail .head")).toContainText("プロダクトエンジニア");
+
+    await page.getByTestId("profile-cta").click();
+    const profile = page.locator(".entity.profile.open");
+    await expect(profile).toContainText("経歴");
+    await expect(profile).toContainText("藤井 貴浩");
   });
 });
 
@@ -84,6 +115,10 @@ test.describe("mobile", () => {
     await page.goto("/en");
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);
+
+    // no dead strip below the stage (regression: fixed-svh field height)
+    const verticalGap = await page.evaluate(() => document.documentElement.scrollHeight - window.innerHeight);
+    expect(verticalGap).toBeLessThanOrEqual(1);
 
     await page.evaluate(() => (window as unknown as { __open: (id: string) => void }).__open("koiki"));
     await expect(page.locator(".entity.open")).toBeVisible();

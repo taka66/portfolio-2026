@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { OntologyGraph } from "@/components/OntologyGraph";
 import { ParseLog } from "@/components/ParseLog";
 import { EntityPanel } from "@/components/EntityPanel";
-import { DEFAULT_FOCUS, ENTITIES, NODES, SENTENCES, type QueryId } from "@/data/ontology";
+import { ProfilePanel } from "@/components/ProfilePanel";
+import { DEFAULT_FOCUS, ENTITIES, NODES, SENTENCES, UI, type QueryId } from "@/data/ontology";
 import type { Locale } from "@/i18n/config";
 
 const QUERIES: QueryId[] = ["career", "craft", "voice", "life"];
@@ -13,6 +14,7 @@ export function Stage({ lang }: { lang: Locale }) {
   const [visibleEdges, setVisibleEdges] = useState(0);
   const [activeQuery, setActiveQuery] = useState<QueryId | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [triples, setTriples] = useState(0);
 
@@ -21,9 +23,22 @@ export function Stage({ lang }: { lang: Locale }) {
     setTriples(count);
   }, []);
 
+  const openEntity = useCallback((id: string | null) => {
+    setProfileOpen(false);
+    setSelectedId(id);
+  }, []);
+
+  const openProfile = useCallback(() => {
+    setSelectedId(null);
+    setProfileOpen(true);
+  }, []);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedId(null);
+      if (e.key === "Escape") {
+        setSelectedId(null);
+        setProfileOpen(false);
+      }
     };
     addEventListener("keydown", onKey);
     return () => removeEventListener("keydown", onKey);
@@ -33,20 +48,25 @@ export function Stage({ lang }: { lang: Locale }) {
     ? (ENTITIES[hoverId]?.desc[lang] ?? SENTENCES[hoverId]?.[lang] ?? DEFAULT_FOCUS[lang])
     : DEFAULT_FOCUS[lang];
 
+  const [legendLine1, legendLine2] = UI.legend[lang].split("|");
+
   return (
     <main className="stage">
       <aside className="rail">
         <div className="head">
           takahirofujii.dev — <b>ontology.ttl</b>
           <br />
-          <span className="who">:fujii</span> · 藤井 貴浩 · product engineer / cto
+          <span className="who">:fujii</span> · 藤井 貴浩 · {UI.rolesLine[lang]}
           <br />
           triples <span className="stat" data-testid="triples">{triples}</span> · nodes{" "}
           <span className="stat">{NODES.length}</span> · lang <span className="stat">{lang}</span>
         </div>
+        <button className="profile-cta" onClick={openProfile} data-testid="profile-cta">
+          {UI.profileButton[lang]} <span aria-hidden="true">▸</span>
+        </button>
         <ParseLog onCommit={onCommit} />
         <div className="focus">
-          <div className="fp">FOCUS</div>
+          <div className="fp">{UI.focusLabel[lang]}</div>
           {/* sentences are hand-authored in src/data/ontology.ts, not user input */}
           <div className="ft hum" dangerouslySetInnerHTML={{ __html: focusHtml }} />
         </div>
@@ -57,7 +77,7 @@ export function Stage({ lang }: { lang: Locale }) {
           visibleEdges={visibleEdges}
           activeQuery={activeQuery}
           selectedId={selectedId}
-          onSelect={setSelectedId}
+          onSelect={openEntity}
           onHoverChange={setHoverId}
         />
         <nav className="queries" aria-label="saved queries">
@@ -85,12 +105,13 @@ export function Stage({ lang }: { lang: Locale }) {
           </span>
         </div>
         <div className="legend">
-          <i>●</i> person / role &nbsp; <i>■</i> org &nbsp; <i>▲</i> artifact
+          {legendLine1}
           <br />
-          <i>◆</i> skill &nbsp; <i>○</i> domain &nbsp; <i>·</i> hobby
+          {legendLine2}
         </div>
 
-        <EntityPanel entityId={selectedId} lang={lang} onClose={() => setSelectedId(null)} onOpen={setSelectedId} />
+        <EntityPanel entityId={selectedId} lang={lang} onClose={() => setSelectedId(null)} onOpen={openEntity} />
+        <ProfilePanel open={profileOpen} lang={lang} onClose={() => setProfileOpen(false)} onOpenEntity={openEntity} />
       </section>
     </main>
   );

@@ -328,16 +328,25 @@ export const ENTITIES: Record<string, EntityDetail> = {
     },
     meta: [
       { p: ":tool", v: "iPad, Figma" },
-      { p: ":count", v: "15+" },
+      { p: ":count", v: "16" },
     ],
     gallery: [
       { src: "/design/fuji.webp", caption: { ja: "富士山 — 名前にも入っているFuji", en: "Mt. Fuji — it is in the name" } },
       { src: "/design/koikifm.webp", caption: { ja: "小粋fm ロゴ", en: "Koiki.fm logo" } },
+      { src: "/design/fujii.webp", caption: { ja: "自画像", en: "Self-portrait" } },
+      { src: "/design/hydrangea.webp", caption: { ja: "あじさい", en: "Hydrangea" } },
+      { src: "/design/hydrangea_border.webp", caption: { ja: "あじさい(縁)", en: "Hydrangea (border)" } },
+      { src: "/design/dan.webp", caption: { ja: "タコスボーイ", en: "Taco boy" } },
+      { src: "/design/boss.webp", caption: { ja: "Boss", en: "Boss" } },
       { src: "/design/engineer.webp", caption: { ja: "とあるエンジニア", en: "A certain engineer" } },
-    ],
-    items: [
-      { y: "—", label: { ja: "バスケットボールユニフォーム ×2(WINX / SUPERPOINTS)", en: "Basketball uniforms ×2 (WINX / SUPERPOINTS)" } },
-      { y: "—", label: { ja: "Line Sticker for Web Engineer / 東京笑花ロゴ / 名刺", en: "Line sticker for web engineers / Tokyo-Shoka logo / business cards" } },
+      { src: "/design/lady.webp", caption: { ja: "Lady", en: "Lady" } },
+      { src: "/design/movie_director.webp", caption: { ja: "映画監督", en: "A film director" } },
+      { src: "/design/nabnab.png", caption: { ja: "Lineスタンプ(Web Engineer)", en: "Line stickers for web engineers" } },
+      { src: "/design/tokyoflower.png", caption: { ja: "東京笑花 ロゴ", en: "Tokyo-Shoka logo" } },
+      { src: "/design/webhack.png", caption: { ja: "Speaker Card", en: "Speaker card" } },
+      { src: "/design/winx.png", caption: { ja: "バスケユニフォーム(WINX)", en: "Basketball uniform (WINX)" } },
+      { src: "/design/superpoints.png", caption: { ja: "バスケユニフォーム(SUPERPOINTS)", en: "Basketball uniform (SUPERPOINTS)" } },
+      { src: "/design/business-card.png", caption: { ja: "名刺", en: "Business cards" } },
     ],
     rel: ["koiki", "basketball", "uiux"],
   },
@@ -390,9 +399,35 @@ export const SENTENCES: Record<string, L10n> = {
 };
 
 export const DEFAULT_FOCUS: L10n = {
-  ja: "ノードに触れると翻訳、クリックで詳細が開きます。",
-  en: "Hover to translate a triple; click to open details.",
+  ja: "ノードに触れると翻訳、クリックで詳細。全体像は「プロフィール全文」からどうぞ。",
+  en: "Hover to translate a triple; click for details — or read the full profile.",
 };
+
+/** localized UI strings (everything visible outside the ontology data itself) */
+export const UI = {
+  rolesLine: { ja: "プロダクトエンジニア / CTO", en: "product engineer / cto" },
+  profileButton: { ja: "プロフィール全文を読む", en: "Read the full profile" },
+  profileTitle: { ja: "プロフィール", en: "Profile" },
+  profileType: { ja: "オントロジーから生成", en: "derived from the ontology" },
+  focusLabel: { ja: "FOCUS", en: "FOCUS" },
+  headTriples: { ja: "トリプル", en: "TRIPLES" },
+  headGallery: { ja: "ギャラリー", en: "GALLERY" },
+  headInstances: { ja: "インスタンス", en: "INSTANCES" },
+  headRelated: { ja: "関連", en: "RELATED" },
+  legend: {
+    ja: "● 人物 / 役職 ■ 組織 ▲ 制作物|◆ スキル ○ 領域 · 趣味",
+    en: "● person / role ■ org ▲ artifact|◆ skill ○ domain · hobby",
+  },
+  close: { ja: "閉じる", en: "close" },
+} satisfies Record<string, L10n>;
+
+/** the full-profile document: a curated linear walk through the graph */
+export const PROFILE_SECTIONS: { title: L10n; entityIds: string[] }[] = [
+  { title: { ja: "経歴", en: "Career" }, entityIds: ["wealthpark", "rakuten", "goodpatch", "afc"] },
+  { title: { ja: "発信", en: "Voice" }, entityIds: ["koiki", "talks", "seminars", "reviews", "note"] },
+  { title: { ja: "制作", en: "Craft" }, entityIds: ["uiux", "illustration", "llm"] },
+  { title: { ja: "生活", en: "Life" }, entityIds: ["basketball", "cooking"] },
+];
 
 // ============ opening parse log ============
 

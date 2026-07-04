@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { EDGES, ENTITIES, nodeById } from "@/data/ontology";
+import { EDGES, ENTITIES, UI, nodeById } from "@/data/ontology";
 import type { Locale } from "@/i18n/config";
 
 interface EntityPanelProps {
@@ -24,7 +24,7 @@ export function EntityPanel({ entityId, lang, onClose, onOpen }: EntityPanelProp
               <div className="e-uri">{node.label}</div>
               <div className="e-type">{detail?.type ?? `a :${node.cls.charAt(0).toUpperCase()}${node.cls.slice(1)}`}</div>
             </div>
-            <button className="e-close" onClick={onClose} aria-label="close">
+            <button className="e-close" onClick={onClose} aria-label={UI.close[lang]}>
               ✕
             </button>
           </div>
@@ -35,7 +35,7 @@ export function EntityPanel({ entityId, lang, onClose, onOpen }: EntityPanelProp
                 <p className="e-desc hum">{detail.desc[lang]}</p>
                 {detail.meta && (
                   <div className="e-sec">
-                    <h3>TRIPLES</h3>
+                    <h3>{UI.headTriples[lang]}</h3>
                     {detail.meta.map((m) => (
                       <div className="t-row" key={m.p + m.v}>
                         <span className="tp">{m.p}</span>
@@ -54,7 +54,7 @@ export function EntityPanel({ entityId, lang, onClose, onOpen }: EntityPanelProp
                 )}
                 {detail.gallery && (
                   <div className="e-sec">
-                    <h3>GALLERY</h3>
+                    <h3>{UI.headGallery[lang]}</h3>
                     <div className="gallery">
                       {detail.gallery.map((g) => (
                         <figure key={g.src}>
@@ -67,7 +67,7 @@ export function EntityPanel({ entityId, lang, onClose, onOpen }: EntityPanelProp
                 )}
                 {detail.items && (
                   <div className="e-sec">
-                    <h3>INSTANCES ({detail.items.length})</h3>
+                    <h3>{UI.headInstances[lang]} ({detail.items.length})</h3>
                     {detail.items.map((item, i) => (
                       <div className="i-row" key={i}>
                         <span className="iy">{item.y}</span>
@@ -83,7 +83,7 @@ export function EntityPanel({ entityId, lang, onClose, onOpen }: EntityPanelProp
                 )}
                 {detail.rel && (
                   <div className="e-sec">
-                    <h3>RELATED</h3>
+                    <h3>{UI.headRelated[lang]}</h3>
                     <div className="chips">
                       {detail.rel.map((id) => (
                         <button key={id} onClick={() => onOpen(id)}>
@@ -98,7 +98,7 @@ export function EntityPanel({ entityId, lang, onClose, onOpen }: EntityPanelProp
               <>
                 <div className="e-title hum">{node.label.slice(1)}</div>
                 <div className="e-sec">
-                  <h3>TRIPLES</h3>
+                  <h3>{UI.headTriples[lang]}</h3>
                   {EDGES.filter((e) => e.s === node.id || e.o === node.id)
                     .slice(0, 6)
                     .map((e, i) => (
