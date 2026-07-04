@@ -159,6 +159,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "plays", o: "basketball" },
   { s: "fujii", p: "cooks", o: "cooking" },
   { s: "fujii", p: "drinks", o: "coffee" },
+  { s: "coffee", p: "fueled", o: "engineer" },
 ];
 
 // ============ instance tier (detail panels) ============
@@ -456,6 +457,19 @@ export const ENTITIES: Record<string, EntityDetail> = {
     ],
     rel: ["koiki"],
   },
+  coffee: {
+    type: "a :Hobby",
+    title: { ja: "コーヒー", en: "Coffee" },
+    desc: {
+      ja: "社会人になるまで、コーヒーはほとんど飲みませんでした。最初の出会いは、仕事中に寝ないための缶コーヒー。そのうちスタバや学芸大学・中目黒のカフェで、コーヒーを飲みながらプログラミングの勉強をするようになりました。仕事後や休日にスキルを磨くためのお供だったのが、素敵なカフェやコーヒーとの出会いを重ねるうちに、それ自体が趣味になって今に至ります。",
+      en: "Coffee wasn't a habit until I started working: the first encounter was canned coffee, purely to stay awake on the job. It grew into studying programming over coffee at Starbucks and the cafes of Gakugei-Daigaku and Nakameguro, my companion for sharpening skills after work and on weekends. Somewhere along the way, meeting good cafes and good coffee, it stopped being a tool and became the hobby it is today.",
+    },
+    meta: [
+      { p: ":origin", v: "缶コーヒー(眠気覚まし)" },
+      { p: ":habitat", v: "学芸大学・中目黒のカフェ" },
+    ],
+    rel: ["engineer", "tokyo", "tokyolocal", "cooking"],
+  },
   basketball: {
     type: "a :Hobby",
     title: { ja: "バスケットボール", en: "Basketball" },
@@ -564,6 +578,7 @@ export const LOG_LINES: LogLine[] = [
   { s: ":fujii", p: ":draws", o: ":illustration", ghosts: [":mt-fuji"] },
   { s: ":illustration", p: ":brands", o: ":koiki.fm" },
   { s: ":illustration", p: ":for", o: ":basketball", ghosts: [":uniforms"] },
+  { s: ":coffee", p: ":fueled", o: ":Engineer", ghosts: [":缶コーヒー"] },
   { s: ":fujii", p: ":wrote", o: ":desi-gneer", ghosts: [":2013-2019"] },
   { s: ":fujii", p: ":livesIn", o: ":tokyo", ghosts: [":native"] },
   { s: ":fujii", p: ":coFounded", o: ":koiki-team", ghosts: [":2013-2017"] },
