@@ -98,6 +98,9 @@ export const NODES: OntologyNode[] = [
   { id: "note", label: ":note", cls: "artifact", queries: ["voice", "life"], seed: [0.14, 0.26] },
   { id: "engmgmt", label: ":eng-management", cls: "domain", queries: ["voice", "career"], seed: [0.42, 0.34] },
   // life
+  { id: "tokyo", label: ":tokyo", cls: "domain", queries: ["life"], seed: [0.58, 0.8] },
+  { id: "tokyolocal", label: ":tokyo-as-a-local", cls: "artifact", queries: ["life", "craft"], seed: [0.72, 0.84] },
+  { id: "koikiteam", label: ":koiki-team", cls: "org", queries: ["craft", "life"], seed: [0.22, 0.08] },
   { id: "basketball", label: ":basketball", cls: "hobby", queries: ["life"], seed: [0.52, 0.9] },
   { id: "cooking", label: ":cooking", cls: "hobby", queries: ["life"], seed: [0.44, 0.94] },
   { id: "coffee", label: ":coffee", cls: "hobby", queries: ["life"], seed: [0.62, 0.92] },
@@ -142,6 +145,11 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "draws", o: "illustration" },
   { s: "illustration", p: "brands", o: "koiki" },
   { s: "illustration", p: "for", o: "basketball" },
+  { s: "fujii", p: "livesIn", o: "tokyo" },
+  { s: "fujii", p: "made", o: "tokyolocal" },
+  { s: "tokyolocal", p: "about", o: "tokyo" },
+  { s: "fujii", p: "coFounded", o: "koikiteam" },
+  { s: "koiki", p: "namedAfter", o: "koikiteam" },
   { s: "fujii", p: "plays", o: "basketball" },
   { s: "fujii", p: "cooks", o: "cooking" },
   { s: "fujii", p: "drinks", o: "coffee" },
@@ -243,7 +251,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":listen", v: "koiki.fm ↗", href: "https://koiki.fm" },
     ],
     items: [{ y: "—", label: { ja: "note マガジン「小粋fm」(7本)", en: 'note magazine "Koiki fm" (7 posts)' } }],
-    rel: ["engmgmt", "illustration", "note"],
+    rel: ["engmgmt", "illustration", "note", "koikiteam"],
   },
   talks: {
     type: "a :Artifact · :TalkSeries",
@@ -318,6 +326,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { y: "2023", label: { ja: "WealthPark CTO就任によせて", en: "On becoming CTO of WealthPark" } },
       { y: "2023", label: { ja: "教養としての「会計」入門", en: "Accounting as a liberal art" } },
       { y: "—", label: { ja: "旧ブログ: Spotify Modelの虚像と実像 / VPoEとしての最初の取組 ほか", en: "Older: Spotify Model myths / First moves as VPoE, etc." } },
+      { y: "—", label: { ja: "旧テックブログ: Desi-gineer(はてなブログ)", en: "Older tech blog: Desi-gineer (Hatena)" } },
     ],
     rel: ["engmgmt", "koiki"],
   },
@@ -371,6 +380,53 @@ export const ENTITIES: Record<string, EntityDetail> = {
     },
     meta: [{ p: ":status", v: "active" }],
     rel: ["seminars", "wealthpark"],
+  },
+  tokyo: {
+    type: "a :Place",
+    title: { ja: "東京", en: "Tokyo" },
+    desc: {
+      ja: "生まれも育ちも東京。拠点であり、tokyo as a local で紹介していた対象でもあります。",
+      en: "Born and raised in Tokyo. Home base, and the subject of tokyo as a local.",
+    },
+    rel: ["tokyolocal"],
+  },
+  tokyolocal: {
+    type: "a :Artifact · :SideProject",
+    title: { ja: "tokyo as a local", en: "tokyo as a local" },
+    desc: {
+      ja: "東京で生まれ育ったローカルとして、日常の東京を英語で紹介していた個人サイトです。学芸大学・駒沢大学エリアのカフェやバスケットボールショップなど、観光ガイドには載らない場所を載せていました。",
+      en: "Share my daily life of Tokyo: a personal site introducing how a Tokyo native goes about their day. Cafes and basketball shops around Gakugei-Daigaku and Komazawa — the places tourist guides skip.",
+    },
+    meta: [
+      { p: ":lang", v: "en" },
+      { p: ":repo", v: "taka66/tokyo-as-a-local" },
+    ],
+    items: [
+      { y: "—", label: { ja: "STREAMER COFFEE(学芸大学)", en: "STREAMER COFFEE (Gakugei-Daigaku)" } },
+      { y: "—", label: { ja: "日本のバスケットボールブランド・ショップ", en: "Japanese basketball brand & shop" } },
+      { y: "—", label: { ja: "オリジナルハンカチの店(駒沢大学)", en: "Original handkerchief shop (Komazawa-Daigaku)" } },
+      { y: "—", label: { ja: "学芸大学〜駒沢大学エリアの散歩", en: "Walking the Gakugei-Daigaku to Komazawa stretch" } },
+    ],
+    rel: ["tokyo", "coffee", "basketball"],
+  },
+  koikiteam: {
+    type: "a :Organization · :CreativeTeam",
+    title: { ja: "小粋(KOIKI)", en: "KOIKI" },
+    desc: {
+      ja: "『小粋(STYLISH)なプロダクトをつくる』創作組織。共同創業者のひとりとして、ハッカソンなどでプロダクトを作っていました(2013-2017)。Monstera、Sigure、Spot4u、Betogether(Yahoo Hackday 2017)など。",
+      en: "An organization to create stylish (koiki) products. Co-founded it and built things at hackathons (2013-2017): Monstera, Sigure, Spot4u, and Betogether at Yahoo Hackday 2017.",
+    },
+    meta: [
+      { p: ":period", v: "2013 – 2017" },
+      { p: ":members", v: "8" },
+      { p: ":url", v: "koikijs.github.io ↗", href: "https://koikijs.github.io/" },
+    ],
+    items: [
+      { y: "2017", label: { ja: "Betogether — オンラインコミュニケーションシステム(Yahoo Hackday 2017)", en: "Betogether — online communication system (Yahoo Hackday 2017)" } },
+      { y: "—", label: { ja: "Monstera — イベントスケジュール管理", en: "Monstera — event schedule management" } },
+      { y: "—", label: { ja: "Spot4u — スポット検索", en: "Spot4u — spot search" } },
+    ],
+    rel: ["koiki"],
   },
   basketball: {
     type: "a :Hobby",
@@ -480,6 +536,8 @@ export const LOG_LINES: LogLine[] = [
   { s: ":fujii", p: ":draws", o: ":illustration", ghosts: [":mt-fuji"] },
   { s: ":illustration", p: ":brands", o: ":koiki.fm" },
   { s: ":illustration", p: ":for", o: ":basketball", ghosts: [":uniforms"] },
+  { s: ":fujii", p: ":livesIn", o: ":tokyo", ghosts: [":native"] },
+  { s: ":fujii", p: ":coFounded", o: ":koiki-team", ghosts: [":2013-2017"] },
   { s: ":fujii", p: ":codesIn", o: ":typescript, :go, :python, :java" },
   { s: "# graph committed", comment: true },
 ];
