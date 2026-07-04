@@ -164,6 +164,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "rootedIn", o: "origins" },
   { s: "origins", p: "fueled", o: "engineer" },
   { s: "origins", p: "fueled", o: "uiux" },
+  { s: "illustration", p: "rootedIn", o: "origins", weight: 0.5 },
   { s: "basketball", p: "at", o: "rakuten", weight: 0.6 },
 ];
 
@@ -368,11 +369,12 @@ export const ENTITIES: Record<string, EntityDetail> = {
     type: "a :Artifact · :DesignWork",
     title: { ja: "イラスト & デザインワーク", en: "Illustration & Design Works" },
     desc: {
-      ja: "プライベートで制作したデザインやイラストの作品集です。小粋fmのロゴやLineスタンプ、名刺、バスケットボールのユニフォームも自作しました。",
-      en: "A collection of design and illustration works made in private: the Koiki.fm logo, Line stickers, business cards and basketball uniforms included.",
+      ja: "幼少期から絵が得意だったわけではありません。大学2年のとき、インターンで稼いだお金でAdobeのCreative Suiteを一式買ったのが始まりです。そこから塾の教材やバナー、チラシをイラレで作るようになり、社会人になってからも趣味やフリーランスでロゴやデザインを作っています。小粋fmのロゴやLineスタンプ、名刺、バスケットボールのユニフォームもその一部です。",
+      en: "I was never the kid who could draw. It started in my second year of university, when I spent my internship earnings on the full Adobe Creative Suite. From there came teaching materials, banners and flyers in Illustrator, and the designing never stopped: logos and design work as a hobby and freelance. The Koiki.fm logo, Line stickers, business cards and basketball uniforms in this gallery are part of that.",
     },
     meta: [
-      { p: ":tool", v: "iPad, Figma" },
+      { p: ":since", v: "大学2年(Creative Suite購入)" },
+      { p: ":tool", v: "Illustrator → iPad, Figma" },
       { p: ":count", v: "16" },
     ],
     gallery: [
@@ -393,7 +395,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { src: "/design/superpoints.png", caption: { ja: "バスケユニフォーム(SUPERPOINTS)", en: "Basketball uniform (SUPERPOINTS)" } },
       { src: "/design/business-card.png", caption: { ja: "名刺", en: "Business cards" } },
     ],
-    rel: ["koiki", "basketball", "uiux"],
+    rel: ["koiki", "basketball", "uiux", "origins"],
   },
   uiux: {
     type: "a :Domain",
@@ -435,6 +437,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { y: "中学", label: { ja: "BBS → チャット → ホームページ → HTML", en: "BBS → chat → homepages → HTML" } },
       { y: "高校", label: { ja: "バスケに熱中して小休止(→ :basketball)", en: "A basketball-fueled intermission (→ :basketball)" } },
       { y: "大学", label: { ja: "数理情報科学を専攻し、コンピュータの世界に帰還", en: "Majoring in mathematical information science: back to computers" } },
+      { y: "大学", label: { ja: "インターンで稼いだお金でAdobe Creative Suiteを一式購入", en: "Spent internship earnings on the full Adobe Creative Suite" } },
       { y: "大学", label: { ja: "塾講師 — Illustratorを駆使して教材プリントを自作", en: "Tutoring job: making original teaching materials in Illustrator" } },
       { y: "大学", label: { ja: "広報課バイトでデザインとWeb制作", en: "University PR office job: design and web production" } },
       { y: "卒研", label: { ja: "GoogleのPageRankアルゴリズムの改善", en: "Improving Google's PageRank algorithm" } },
