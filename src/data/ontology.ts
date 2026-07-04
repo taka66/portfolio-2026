@@ -107,6 +107,7 @@ export const NODES: OntologyNode[] = [
   { id: "koikiteam", label: ":koiki-team", cls: "org", queries: ["craft", "life"], seed: [0.22, 0.08] },
   { id: "basketball", label: ":basketball", cls: "hobby", queries: ["life"], seed: [0.52, 0.9] },
   { id: "cooking", label: ":cooking", cls: "hobby", queries: ["life"], seed: [0.44, 0.94] },
+  { id: "sake", label: ":sake", cls: "hobby", queries: ["life"], seed: [0.48, 0.86] },
   { id: "coffee", label: ":coffee", cls: "hobby", queries: ["life"], seed: [0.62, 0.92] },
 ];
 
@@ -160,6 +161,8 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "plays", o: "basketball" },
   { s: "fujii", p: "cooks", o: "cooking" },
   { s: "fujii", p: "drinks", o: "coffee" },
+  { s: "fujii", p: "drinks", o: "sake" },
+  { s: "sake", p: "pairsWith", o: "cooking" },
   { s: "coffee", p: "fueled", o: "engineer" },
   { s: "fujii", p: "rootedIn", o: "origins" },
   { s: "origins", p: "fueled", o: "engineer" },
@@ -504,6 +507,20 @@ export const ENTITIES: Record<string, EntityDetail> = {
     ],
     rel: ["engineer", "tokyo", "tokyolocal", "cooking"],
   },
+  sake: {
+    type: "a :Hobby",
+    title: { ja: "お酒", en: "Drinks" },
+    desc: {
+      ja: "強いナラティブがあるわけではないかもしれません。ただ昔から飲むのが好きで、いまもよく行く飲み屋で週に数回、店主や友達と話しています。本質的には、お酒というより友達と話すことが好きなのかもしれません。そのなかで徐々に詳しくなり、いまではビール、焼酎、ジン、日本酒、ワインのどれも好きで、料理との組み合わせも楽しめるようになりました。住んできた場所の近くには思い入れのある店が多く、住む場所が変わるたびに好きな店と好きなお酒が少しずつ増えてきた、ということかなと思っています。",
+      en: "There may not be a strong narrative here. But I have always liked drinking, and a few nights a week I am at my usual bar, talking with the owner and friends. Essentially it may be less about the alcohol and more about the conversation. Along the way I got to know it anyway: beer, shochu, gin, sake, wine, all of them, and pairing them with food. Every place I have lived left me a bar I care about, so the list of favorite bars and favorite drinks just kept growing, a little at a time.",
+    },
+    meta: [
+      { p: ":essence", v: "お酒というより、友達と話すこと" },
+      { p: ":favorites", v: "ビール, 焼酎, ジン, 日本酒, ワイン" },
+      { p: ":frequency", v: "週数回、いつもの店で" },
+    ],
+    rel: ["cooking", "tokyo"],
+  },
   basketball: {
     type: "a :Hobby",
     title: { ja: "バスケットボール", en: "Basketball" },
@@ -534,7 +551,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":accelerants", v: "コロナ禍, YouTube, リモートワーク" },
       { p: ":method", v: "配合を変えて、味の変化を観察" },
     ],
-    rel: ["coffee", "engineer"],
+    rel: ["coffee", "engineer", "sake"],
   },
 };
 
