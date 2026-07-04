@@ -5,7 +5,8 @@ import { OntologyGraph } from "@/components/OntologyGraph";
 import { ParseLog } from "@/components/ParseLog";
 import { EntityPanel } from "@/components/EntityPanel";
 import { ProfilePanel } from "@/components/ProfilePanel";
-import { DEFAULT_FOCUS, ENTITIES, NODES, SENTENCES, UI, type QueryId } from "@/data/ontology";
+import Link from "next/link";
+import { DEFAULT_FOCUS, ENTITIES, NODES, SENTENCES, UI, nodeById, type QueryId } from "@/data/ontology";
 import type { Locale } from "@/i18n/config";
 
 const QUERIES: QueryId[] = ["career", "craft", "voice", "life"];
@@ -31,6 +32,13 @@ export function Stage({ lang }: { lang: Locale }) {
   const openProfile = useCallback(() => {
     setSelectedId(null);
     setProfileOpen(true);
+  }, []);
+
+  useEffect(() => {
+    const focus = new URLSearchParams(location.search).get("e");
+    if (!focus || !nodeById[focus]) return;
+    const timer = setTimeout(() => setSelectedId(focus), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -92,6 +100,10 @@ export function Stage({ lang }: { lang: Locale }) {
           ))}
         </nav>
         <div className="topbar">
+          <span className="pagenav">
+            <Link href={lang === "ja" ? "/works" : "/en/works"}>?works</Link>
+            <Link href={lang === "ja" ? "/design" : "/en/design"}>?design</Link>
+          </span>
           <span className="tempnote">temp 0.0 · deterministic</span>
           <span className="lang">
             {/* Deliberately plain <a>, not <Link>: locale switching must be a

@@ -268,7 +268,10 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":co-host", v: ":fujii" },
       { p: ":listen", v: "koiki.fm ↗", href: "https://koiki.fm" },
     ],
-    items: [{ y: "—", label: { ja: "note マガジン「小粋fm」(7本)", en: 'note magazine "Koiki fm" (7 posts)' } }],
+    items: [
+      { y: "2020", label: { ja: "小粋fm(Koiki.fm)を開始", en: "Koiki.fm launched" }, href: "https://koiki.fm" },
+      { y: "—", label: { ja: "note マガジン「小粋fm」(7本)", en: 'note magazine "Koiki fm" (7 posts)' } },
+    ],
     rel: ["engmgmt", "illustration", "note", "koikiteam"],
   },
   talks: {
@@ -600,6 +603,14 @@ export const UI = {
     en: "● person / role ■ org ▲ artifact|◆ skill ○ domain · hobby",
   },
   close: { ja: "閉じる", en: "close" },
+  worksSub: {
+    ja: "講演、ポッドキャスト、セミナー、翻訳レビュー、記事。出典チップを押すと、グラフの該当エンティティが開きます。",
+    en: "Talks, podcasts, seminars, translation reviews, writing. The source chip on each row opens the entity in the graph.",
+  },
+  designSub: {
+    ja: "幼少期から絵が得意だったわけではありません。大学2年、インターン代でCreative Suiteを買ったところから始まった作品集です。",
+    en: "I was never the kid who could draw. This collection started with the Creative Suite bought on internship earnings in my second year of university.",
+  },
 } satisfies Record<string, L10n>;
 
 
