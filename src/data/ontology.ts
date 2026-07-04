@@ -108,6 +108,7 @@ export const NODES: OntologyNode[] = [
   { id: "basketball", label: ":basketball", cls: "hobby", queries: ["life"], seed: [0.52, 0.9] },
   { id: "cooking", label: ":cooking", cls: "hobby", queries: ["life"], seed: [0.44, 0.94] },
   { id: "sake", label: ":sake", cls: "hobby", queries: ["life"], seed: [0.48, 0.86] },
+  { id: "washoku", label: ":washoku", cls: "hobby", queries: ["life"], seed: [0.38, 0.84] },
   { id: "coffee", label: ":coffee", cls: "hobby", queries: ["life"], seed: [0.62, 0.92] },
 ];
 
@@ -163,6 +164,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "drinks", o: "coffee" },
   { s: "fujii", p: "drinks", o: "sake" },
   { s: "sake", p: "pairsWith", o: "cooking" },
+  { s: "fujii", p: "eats", o: "washoku" },
   { s: "coffee", p: "fueled", o: "engineer" },
   { s: "fujii", p: "rootedIn", o: "origins" },
   { s: "origins", p: "fueled", o: "engineer" },
@@ -519,7 +521,21 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":favorites", v: "ビール, 焼酎, ジン, 日本酒, ワイン" },
       { p: ":frequency", v: "週数回、いつもの店で" },
     ],
-    rel: ["cooking", "tokyo"],
+    rel: ["cooking", "tokyo", "washoku"],
+  },
+  washoku: {
+    type: "a :Hobby",
+    title: { ja: "和食", en: "Washoku" },
+    desc: {
+      ja: "やっぱり自分は日本が好きだ、という点に影響されている部分が大きいです。他の料理も好きなのですが、海外から帰ってきた後に食べる和食が好きです。油分が多くない料理も多く、落ち着いて食べられるところが好きです。",
+      en: "It comes largely from the simple fact that I love Japan. I enjoy other cuisines too, but the washoku eaten right after coming home from abroad is the one I love. Much of it is light on oil, so you can eat it calmly, and that calm is the point.",
+    },
+    meta: [
+      { p: ":because", v: "やっぱり、日本が好きだから" },
+      { p: ":best", v: "海外から帰ってきた直後の一食" },
+      { p: ":quality", v: "油分少なめ、落ち着いて食べられる" },
+    ],
+    rel: ["cooking", "sake", "travel"],
   },
   basketball: {
     type: "a :Hobby",
