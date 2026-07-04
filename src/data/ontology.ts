@@ -160,6 +160,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "cooks", o: "cooking" },
   { s: "fujii", p: "drinks", o: "coffee" },
   { s: "coffee", p: "fueled", o: "engineer" },
+  { s: "basketball", p: "at", o: "rakuten", weight: 0.6 },
 ];
 
 // ============ instance tier (detail panels) ============
@@ -474,10 +475,19 @@ export const ENTITIES: Record<string, EntityDetail> = {
     type: "a :Hobby",
     title: { ja: "バスケットボール", en: "Basketball" },
     desc: {
-      ja: "コートの上では肩書きが消えるのがいいところです。チームのユニフォームは自分でデザインしました(→ :illustration)。",
-      en: "Titles disappear on the court. Team uniforms: designed by the player (→ :illustration).",
+      ja: "小学校のとき、先輩に誘われて始めました。転機は中学時代、夏に部活が少なかったので駒沢公園のストリートコートで遊ぶようになったこと。ここで出会った先輩や仲間とは、20年以上経ったいまも一緒にバスケをしています。仲間とチームを作って大会に出て、そのユニフォームは自分でデザインしました。高校・大学でも続け、楽天ではバスケ部に入り関東実業団リーグにも参加。いまは会社の仲間や昔の仲間と、趣味とエクササイズとして楽しんでいます。",
+      en: "It started in elementary school when an older kid invited me in. The turning point came in junior high: my school had few summer clubs, so I started playing on the street courts of Komazawa Park. The friends I met there are still my teammates more than twenty years later. We formed a team, entered tournaments, and I designed our uniforms. I kept playing through high school and university, then joined Rakuten's basketball club and played in the Kanto corporate league. These days it is hobby and exercise, with colleagues and old friends.",
     },
-    rel: ["illustration"],
+    meta: [
+      { p: ":since", v: "小学校 / elementary school" },
+      { p: ":court", v: "駒沢公園ストリートコート" },
+      { p: ":league", v: "関東実業団(楽天バスケ部)" },
+    ],
+    items: [
+      { y: "—", label: { ja: "仲間と作ったチームのユニフォーム(自作 → :illustration)", en: "Uniform for the street-court team (self-designed → :illustration)" } },
+      { y: "—", label: { ja: "楽天バスケ部・関東実業団リーグのユニフォーム(自作 → :illustration)", en: "Uniform for Rakuten's club in the corporate league (self-designed → :illustration)" } },
+    ],
+    rel: ["illustration", "tokyo", "rakuten"],
   },
   cooking: {
     type: "a :Hobby",
