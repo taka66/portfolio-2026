@@ -493,10 +493,15 @@ export const ENTITIES: Record<string, EntityDetail> = {
     type: "a :Hobby",
     title: { ja: "料理", en: "Cooking" },
     desc: {
-      ja: "趣味は料理。好きなものはコーヒー、お酒、和食全般です。",
-      en: "Cooking as a hobby. Favorite things: coffee, alcohol, and Japanese cuisine in general.",
+      ja: "両親の休みがバラバラだったこともあり、小さい頃は父親にごはんを作ることがありました。一人暮らしを始めてからは日常のことに。最初は本を見ながらでしたが、コロナ禍とYouTubeの料理動画、リモートワークが向き合い方を一気に変えました。調味料やスパイスの配合を変えて味の変化を見るのは、ある種の実験でありテストで、そこが好きです。好きなものはコーヒー、お酒、和食全般。",
+      en: "My parents' days off rarely lined up, so as a kid I sometimes cooked for my father. Living alone made it a daily thing. It started with cookbooks; the pandemic, YouTube cooking videos and remote work accelerated it. What I like most is changing the ratios of seasonings and spices and watching how the taste shifts — a kind of experiment, a kind of testing. Favorite things: coffee, alcohol, and Japanese cuisine in general.",
     },
-    rel: ["coffee"],
+    meta: [
+      { p: ":origin", v: "父親へのごはん" },
+      { p: ":accelerants", v: "コロナ禍, YouTube, リモートワーク" },
+      { p: ":method", v: "配合を変えて、味の変化を観察" },
+    ],
+    rel: ["coffee", "engineer"],
   },
 };
 
