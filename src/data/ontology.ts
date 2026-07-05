@@ -77,6 +77,7 @@ export const NODES: OntologyNode[] = [
   { id: "rakuten", label: ":rakuten", cls: "org", queries: ["career"], seed: [0.88, 0.62] },
   { id: "goodpatch", label: ":designers-gym", cls: "org", queries: ["career", "craft"], seed: [0.9, 0.4] },
   { id: "afc", label: ":afc", cls: "org", queries: ["career", "voice"], seed: [0.54, 0.78] },
+  { id: "tus", label: ":tus", cls: "org", queries: ["career"], seed: [0.9, 0.88] },
   { id: "realestate", label: ":real-estate", cls: "domain", queries: ["career"], seed: [0.5, 0.1] },
   { id: "fintech", label: ":fintech", cls: "domain", queries: ["career"], seed: [0.74, 0.08] },
   { id: "travel", label: ":travel", cls: "domain", queries: ["career"], seed: [0.94, 0.74] },
@@ -131,6 +132,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "engineer", p: "at", o: "rakuten" },
   { s: "engineer", p: "at", o: "wealthpark" },
   { s: "fujii", p: "trainedAt", o: "goodpatch" },
+  { s: "fujii", p: "studiedAt", o: "tus" },
   { s: "fujii", p: "taught", o: "afc" },
   { s: "wealthpark", p: "inDomain", o: "realestate" },
   { s: "wealthpark", p: "inDomain", o: "fintech" },
@@ -196,6 +198,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
     },
     meta: [
       { p: ":base", v: "Tokyo, JP" },
+      { p: ":github", v: "github.com/taka66 ↗", href: "https://github.com/taka66" },
       { p: ":x", v: "x.com/taka_ft ↗", href: "https://x.com/taka_ft" },
       { p: ":linkedin", v: "linkedin ↗", href: "https://www.linkedin.com/in/takahiro-fujii-221a7461/" },
       { p: ":note", v: "note.com/takahirofujii ↗", href: "https://note.com/takahirofujii" },
@@ -210,10 +213,11 @@ export const ENTITIES: Record<string, EntityDetail> = {
       en: "Developing and operating products for real estate management companies and property owners, as well as a digital platform for alternative investments. Joined in 2020; frontend development lead, VPoE and SVP before being appointed CTO in 2024.",
     },
     meta: [
-      { p: ":since", v: "2020.04" },
+      { p: ":since", v: "2020.01" },
       { p: ":domain", v: ":real-estate, :fintech" },
       { p: ":roles", v: ":VPoE → :SVP → :CTO" },
       { p: ":web", v: "wealth-park.com ↗", href: "https://wealth-park.com/ja/" },
+      { p: ":patents", v: "出願に関与" },
     ],
     items: [
       { y: "2023", label: { ja: "WealthPark Engineering Blog 開設", en: "Launched WealthPark Engineering Blog" }, href: "https://medium.com/wealthpark-engineering/on-starting-a-tech-blog-at-wealthpark-3bd84c46336" },
@@ -235,12 +239,14 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":domain", v: ":travel" },
     ],
     items: [
-      { y: "2019", label: { ja: "Large react product with 20+ FE engineers(React Tokyo Plus)", en: "Large react product with 20+ FE engineers (React Tokyo Plus)" }, href: "https://speakerdeck.com/taka66/large-react-product-with-20-plus-frontend-engineers-in-rakuten-travel" },
-      { y: "2019", label: { ja: "楽天トラベルのフロントエンドについて(React Meetup)", en: "Rakuten Travel frontend (React Meetup)" }, href: "https://speakerdeck.com/taka66/le-tian-toraberufalsehurontoendonituite-react-meetup" },
-      { y: "2017", label: { ja: "FrontEndからみるmicroservice(Microservice Meetup Vol.6)", en: "Microservice from the frontend (Microservice Meetup Vol.6)" }, href: "https://speakerdeck.com/taka66/microservices-at-microservice-meetup-vol-dot-6" },
-      { y: "2016", label: { ja: "楽天トラベルとSpring(Spring Day 2016)", en: "Rakuten Travel and Spring (Spring Day 2016)" }, href: "https://www.slideshare.net/slideshow/springspring-day-2016/69327034" },
+      { y: "2019", label: { ja: "FrontEnd組織リード(約30名・リーダー5名)。次世代プラットフォームと、Atomic Designベースのデザインシステム", en: "Led the ~30-engineer frontend org (5 leaders): next-gen platform and an Atomic Design based design system" } },
+      { y: "2018", label: { ja: "FrontEnd EM(約20名)。国際ホテル予約の新グローバルアプリを設計・実装", en: "Frontend EM (~20 members): designed and built the new global app for international hotel reservations" } },
+      { y: "2017", label: { ja: "モバイルEM(iOS/Android、8名)。ツアー予約アプリの新規開発", en: "Mobile EM (iOS/Android, team of 8): new tour reservation app" } },
+      { y: "2016", label: { ja: "楽天トラベル初のSPAをReact/ReduxでPOC実装", en: "Built Rakuten Travel's first SPA as a React/Redux proof of concept" } },
+      { y: "2014", label: { ja: "バックエンドManager(予約システム、約10名)。Java/Springエコシステムの推進", en: "Backend manager for the booking system (~10 people), championing the Java/Spring ecosystem" } },
+      { y: "2010", label: { ja: "Webアプリケーションエンジニア(Java)。国際ホテルの管理画面、予約API、経理システムなど", en: "Web application engineer (Java): international hotel admin, reservation APIs, invoicing and more" } },
     ],
-    rel: ["engineer", "travel", "react"],
+    rel: ["engineer", "em", "travel", "react", "talks"],
   },
   goodpatch: {
     type: "a :Organization · :School",
@@ -267,6 +273,19 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":year", v: "AY2023" },
     ],
     rel: ["uiux", "illustration"],
+  },
+  tus: {
+    type: "a :Organization · :University",
+    title: { ja: "東京理科大学", en: "Tokyo University of Science" },
+    desc: {
+      ja: "2010年、数理情報科学専攻を卒業。卒業研究はGoogleのPageRankアルゴリズムの改善でした。のちに講演と学内誌(科学フォーラム)への寄稿で、話す側として戻ってくることになります(→ :talks)。",
+      en: "Graduated in 2010, mathematical information science. The graduation research was on improving Google's PageRank algorithm. Years later the return visit happened on the other side of the lectern (→ :talks).",
+    },
+    meta: [
+      { p: ":degree", v: "Bachelor(2010)" },
+      { p: ":major", v: "数理情報科学" },
+    ],
+    rel: ["origins", "talks", "engineer"],
   },
   koiki: {
     type: "a :Artifact · :Podcast",
@@ -358,6 +377,8 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { y: "2025", label: { ja: "ご機嫌でいる技術", en: "The art of staying in a good mood" }, href: "https://note.com/takahirofujii/n/n47864bb73c6b" },
       { y: "2024", label: { ja: "WealthPark CTO就任によせて", en: "On becoming CTO of WealthPark" }, href: "https://note.com/takahirofujii/n/nf66e8e99c53b" },
       { y: "2024", label: { ja: "教養としての「会計」入門", en: "Accounting as a liberal art" }, href: "https://note.com/takahirofujii/n/n06c63272dc95" },
+      { y: "2023", label: { ja: "WealthParkの開発組織について(2023年)", en: "All about WealthPark Engineering (2023)" }, href: "https://note.com/takahirofujii/n/n09f2ce47e4c2" },
+      { y: "2022", label: { ja: "WealthParkのエンジニア組織について(2022年版)", en: "All about WealthPark Engineering (2022)" }, href: "https://note.com/takahirofujii/n/nfa4b5a3ccb8c" },
       { y: "—", label: { ja: "旧ブログ: Spotify Modelの虚像と実像 / VPoEとしての最初の取組 ほか", en: "Older: Spotify Model myths / First moves as VPoE, etc." } },
     ],
     rel: ["engmgmt", "koiki", "designeer"],
@@ -557,7 +578,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       ja: "楽天でのEM兼任に始まり、VPoE、SVP、CTOと役割を変えながら続いている業務であり、同時に小粋fmや講演、翻訳レビューで発信し続けているテーマでもあります。やる側と話す側の両方をやっているのがこの領域です。",
       en: "It started as an EM double-role at Rakuten and has continued through VPoE, SVP and CTO — while also being the theme of the podcast, the talks and the translation reviews. The one domain where doing it and talking about it never stopped overlapping.",
     },
-    meta: [{ p: ":since", v: "2017(楽天でのEM兼任)" }],
+    meta: [{ p: ":since", v: "2014(楽天でのManager兼任)" }],
     rel: ["vpoe", "cto", "koiki", "talks", "reviews"],
   },
   english: {
@@ -571,6 +592,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":origin", v: "苦手教科(意味が見えなかった)" },
       { p: ":teacher", v: "海外の友達" },
       { p: ":beyond", v: "多様性と文化の理解" },
+      { p: ":environment", v: "メンバーの80%以上が非日本語話者(業務は英語)" },
     ],
     rel: ["rakuten", "wealthpark", "talks", "sake"],
   },
@@ -613,7 +635,7 @@ export const SENTENCES: Record<string, L10n> = {
   cto: { ja: "2024年4月からWealthParkの<b>CTO</b>。", en: "<b>CTO</b> at WealthPark since April 2024." },
   svp: { ja: "<b>SVP</b>(2023.03–2024.04)— VPoEとCTOの間の一年。", en: "<b>SVP</b> (2023.03–2024.04) — the year between VPoE and CTO." },
   vpoe: { ja: "<b>VPoE</b>(2020.04–2023.03)として多国籍組織を構築。", en: "Built a multinational org as <b>VPoE</b> (2020.04–2023.03)." },
-  em: { ja: "楽天でエンジニア兼<b>EM</b>(2017-2019)。マネジメントのキャリアはここから。", en: "Engineer and <b>EM</b> at Rakuten (2017-2019) — where the management career began." },
+  em: { ja: "楽天で2014年からManager/<b>EM</b>を兼務。マネジメントのキャリアはここから。", en: "Manager and <b>EM</b> roles at Rakuten from 2014, where the management career began." },
   engineer: { ja: "楽天(2010-2019)で始まり、WealthParkでもいまも続く<b>エンジニア</b>。CTOになっても、LLMを駆使して手を動かしています。", en: "Started at Rakuten (2010-2019) and still going at WealthPark: an <b>engineer</b> who keeps building hands-on with LLMs, CTO title notwithstanding." },
 };
 
