@@ -89,6 +89,7 @@ export const NODES: OntologyNode[] = [
   { id: "react", label: ":react", cls: "skill", queries: ["craft"], seed: [0.22, 0.3] },
   { id: "aws", label: ":aws", cls: "skill", queries: ["craft"], seed: [0.12, 0.66] },
   { id: "figma", label: ":figma", cls: "skill", queries: ["craft"], seed: [0.3, 0.78] },
+  { id: "english", label: ":english", cls: "skill", queries: ["career", "voice"], seed: [0.6, 0.52] },
   { id: "budgeting", label: ":budgeting", cls: "skill", queries: ["career"], seed: [0.56, 0.64] },
   { id: "hiring", label: ":hiring", cls: "skill", queries: ["career"], seed: [0.66, 0.72] },
   { id: "illustration", label: ":illustration", cls: "artifact", queries: ["craft", "life"], seed: [0.34, 0.88] },
@@ -149,6 +150,8 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "uses", o: "react" },
   { s: "fujii", p: "runsOn", o: "aws" },
   { s: "fujii", p: "appliesTo", o: "llm" },
+  { s: "fujii", p: "speaks", o: "english" },
+  { s: "english", p: "fueled", o: "vpoe", weight: 0.7 },
   { s: "fujii", p: "practices", o: "budgeting" },
   { s: "fujii", p: "practices", o: "hiring" },
   { s: "fujii", p: "draws", o: "illustration" },
@@ -540,6 +543,20 @@ export const ENTITIES: Record<string, EntityDetail> = {
     ],
     rel: ["cooking", "sake", "travel"],
   },
+  english: {
+    type: "a :Skill · :Language",
+    title: { ja: "英語", en: "English" },
+    desc: {
+      ja: "学生時代は苦手教科で、話すことはほとんどできませんでした。自分の人生とリンクしておらず、勉強する意味が見出せなかったのだと思います。卒研と楽天入社で仕事と英語が徐々に紐づき、そこで仲の良い海外の友達ができたことが、英語力向上の一番の貢献者です。もともと人と話すことが好きなので、いろんな国の友達とやり取りするうちに自然と身につきました。多国籍なマネジメントの経験も重なり、英語力だけでなく多様性や文化の理解を深められたことが、国際的な組織を率いることができる理由の一つになっていると思います。",
+      en: "English was my weak subject as a student. It simply was not linked to my life, so I never saw the point of studying it. Graduation research and joining Rakuten slowly tied it to work, and making close friends from abroad became the single biggest contributor: I have always loved talking with people, so the language came naturally through those friendships. Years of managing multinational teams then deepened not just the English but an understanding of diversity and culture — one of the reasons I can lead an international organization.",
+    },
+    meta: [
+      { p: ":origin", v: "苦手教科(意味が見えなかった)" },
+      { p: ":teacher", v: "海外の友達" },
+      { p: ":beyond", v: "多様性と文化の理解" },
+    ],
+    rel: ["rakuten", "wealthpark", "talks", "sake"],
+  },
   basketball: {
     type: "a :Hobby",
     title: { ja: "バスケットボール", en: "Basketball" },
@@ -659,6 +676,7 @@ Favorite things are coffee, alcoholic beverages, and Japanese cuisine in general
 /** surface forms that the story renderer auto-links to entities */
 export const STORY_ALIASES: { id: string; forms: string[] }[] = [
   { id: "wealthpark", forms: ["WealthPark"] },
+  { id: "english", forms: ["多国籍なエンジニア組織", "multinational engineering organization"] },
   { id: "rakuten", forms: ["楽天株式会社", "楽天トラベル", "Rakuten Travel", "Rakuten, Inc."] },
   { id: "llm", forms: ["LLMを", "LLMs", "LLM"] },
   { id: "uiux", forms: ["UI/UX"] },
@@ -702,6 +720,7 @@ export const LOG_LINES: LogLine[] = [
   { s: ":fujii", p: ":livesIn", o: ":tokyo", ghosts: [":native"] },
   { s: ":fujii", p: ":coFounded", o: ":koiki-team", ghosts: [":2013-2017"] },
   { s: ":fujii", p: ":codesIn", o: ":typescript, :go, :python, :java" },
+  { s: ":fujii", p: ":speaks", o: ":english", ghosts: [":海外の友達"] },
   { s: "# graph committed", comment: true },
 ];
 
