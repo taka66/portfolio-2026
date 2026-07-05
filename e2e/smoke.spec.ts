@@ -184,4 +184,34 @@ test.describe("mobile", () => {
     await expect(page.locator(".entity.open")).toBeVisible();
     await expect(page.locator(".entity.open")).toContainText("Koiki.fm");
   });
+
+  test("graph seeds sanely even when the field gets its size late", async ({ page }) => {
+    // Regression: on iOS Safari the canvas could be measured at ~0 height,
+    // piling every node onto one point — the sim exploded and clamped
+    // node clusters into the four corners.
+    await page.setViewportSize({ width: 390, height: 150 });
+    await page.goto("/en");
+    await page.waitForTimeout(600);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(1500);
+
+    type G = { w: number; h: number; nodes: { x: number; y: number; vx: number; vy: number }[] };
+    const g = await page.evaluate(() => (window as unknown as { __graph: () => G }).__graph());
+    expect(g.w).toBeGreaterThan(200);
+    expect(g.h).toBeGreaterThan(200);
+    for (const n of g.nodes) {
+      expect(n.x).toBeGreaterThanOrEqual(39);
+      expect(n.x).toBeLessThanOrEqual(g.w - 39);
+      expect(n.y).toBeGreaterThanOrEqual(65);
+      expect(n.y).toBeLessThanOrEqual(g.h - 39);
+      expect(Math.hypot(n.vx, n.vy)).toBeLessThanOrEqual(7.01);
+    }
+    // no pileups: no two nodes on top of each other anywhere
+    let overlapping = 0;
+    for (let i = 0; i < g.nodes.length; i++)
+      for (let j = i + 1; j < g.nodes.length; j++) {
+        if (Math.hypot(g.nodes[i].x - g.nodes[j].x, g.nodes[i].y - g.nodes[j].y) < 6) overlapping++;
+      }
+    expect(overlapping).toBe(0);
+  });
 });

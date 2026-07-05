@@ -62,21 +62,42 @@ export function OntologyGraph({ visibleEdges, activeQuery, selectedId, onSelect,
     let prevVisible = 0;
     let ripple: { x: number; y: number; t0: number } | null = null;
 
-    function resize() {
+    let seeded = false;
+
+    function applySize() {
+      const newW = canvas!.clientWidth;
+      const newH = canvas!.clientHeight;
+      // A canvas measured before flex layout settles (iOS Safari) reports a
+      // degenerate size; seeding there piles every node onto one point and
+      // the repulsion blows up. Wait for a real size instead.
+      if (newW < 80 || newH < 80) return;
+      if (newW === W && newH === H) return;
+
+      if (seeded) {
+        // keep the settled layout: carry positions into the new box
+        for (const s of sim) {
+          s.x *= newW / W;
+          s.y *= newH / H;
+        }
+        alpha = Math.max(alpha, 0.4);
+      }
+      W = newW;
+      H = newH;
       const dpr = Math.min(devicePixelRatio || 1, 2);
-      W = canvas!.clientWidth;
-      H = canvas!.clientHeight;
       canvas!.width = W * dpr;
       canvas!.height = H * dpr;
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-      sim.forEach((s) => {
-        if (!s.placed) {
+
+      if (!seeded) {
+        for (const s of sim) {
           const seed = nodeById[s.id].seed;
           s.x = seed[0] * W;
           s.y = seed[1] * H;
           s.placed = true;
         }
-      });
+        seeded = true;
+        for (let i = 0; i < 260; i++) tick(1 - i / 300); // pre-settle off-screen
+      }
     }
 
     function tick(a: number) {
@@ -116,6 +137,12 @@ export function OntologyGraph({ visibleEdges, activeQuery, selectedId, onSelect,
         const seed = nodeById[s.id].seed;
         s.vx += (seed[0] * W - s.x) * 0.02 * a;
         s.vy += (seed[1] * H - s.y) * 0.02 * a;
+        // speed cap: whatever the forces do, nodes may drift but never dart
+        const speed = Math.hypot(s.vx, s.vy);
+        if (speed > 7) {
+          s.vx *= 7 / speed;
+          s.vy *= 7 / speed;
+        }
         if (s !== dragging) {
           s.x += s.vx;
           s.y += s.vy;
@@ -278,9 +305,11 @@ export function OntologyGraph({ visibleEdges, activeQuery, selectedId, onSelect,
     }
 
     function loop(now: number) {
-      if (!reduced || dragging) tick(reduced ? 0.3 : Math.max(0.06, alpha));
-      alpha *= 0.998;
-      draw(now);
+      if (seeded) {
+        if (!reduced || dragging) tick(reduced ? 0.3 : Math.max(0.06, alpha));
+        alpha *= 0.998;
+        draw(now);
+      }
       raf = requestAnimationFrame(loop);
     }
 
@@ -339,14 +368,21 @@ export function OntologyGraph({ visibleEdges, activeQuery, selectedId, onSelect,
     canvas.addEventListener("pointerdown", onDown);
     canvas.addEventListener("pointerup", onUp);
     canvas.addEventListener("pointerleave", onLeave);
-    addEventListener("resize", resize);
+    // ResizeObserver instead of window resize: it also fires when flex layout
+    // finally gives the canvas its real size, and on iOS URL-bar collapse
+    const ro = new ResizeObserver(() => applySize());
+    ro.observe(canvas);
 
-    // E2E / debug hook
+    // E2E / debug hooks
     (window as unknown as Record<string, unknown>).__open = (id: string) =>
       nodeById[id] && propsRef.current.onSelect(id);
+    (window as unknown as Record<string, unknown>).__graph = () => ({
+      w: W,
+      h: H,
+      nodes: sim.map((s) => ({ id: s.id, x: s.x, y: s.y, vx: s.vx, vy: s.vy })),
+    });
 
-    resize();
-    for (let i = 0; i < 260; i++) tick(1 - i / 300); // pre-settle
+    applySize();
     raf = requestAnimationFrame(loop);
 
     return () => {
@@ -355,7 +391,7 @@ export function OntologyGraph({ visibleEdges, activeQuery, selectedId, onSelect,
       canvas.removeEventListener("pointerdown", onDown);
       canvas.removeEventListener("pointerup", onUp);
       canvas.removeEventListener("pointerleave", onLeave);
-      removeEventListener("resize", resize);
+      ro.disconnect();
     };
   }, []);
 
