@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { UI, nodeById } from "@/data/ontology";
+import { ENTITIES, UI, nodeById } from "@/data/ontology";
 import { WORK_SOURCES, worksRows, type WorkSource } from "@/lib/queries";
 import type { Locale } from "@/i18n/config";
 
@@ -38,6 +38,17 @@ export function WorksView({ lang }: { lang: Locale }) {
 
       <h1 className="qtitle hum">Works</h1>
       <p className="qsub hum">{UI.worksSub[lang]}</p>
+
+      <div className="qxnote">
+        <span className="c"># {UI.worksNoteHint[lang]}</span>
+        <span className="ql">
+          :fujii <span className="q">:writes</span> :note .{" "}
+          <Link href={`${prefix || "/"}?e=note`}>{UI.worksNoteOpen[lang]} →</Link>{" "}
+          <a href={ENTITIES.note.meta?.find((m) => m.p === ":url")?.href} target="_blank" rel="noopener noreferrer">
+            note.com/takahirofujii ↗
+          </a>
+        </span>
+      </div>
 
       <div className="where" role="group" aria-label="WHERE">
         <span className="wlabel">WHERE</span>

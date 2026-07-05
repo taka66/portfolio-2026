@@ -42,6 +42,14 @@ test.describe("ontology stage (desktop)", () => {
     await expect(page.locator(".entity.open")).toHaveCount(0);
   });
 
+  test("rail exposes the external profile links", async ({ page }) => {
+    await page.goto("/en");
+    const links = page.locator(".head-links a");
+    await expect(links).toHaveCount(3);
+    await expect(links.filter({ hasText: ":note" })).toHaveAttribute("href", "https://note.com/takahirofujii");
+    await expect(links.filter({ hasText: ":github" })).toHaveAttribute("href", "https://github.com/taka66");
+  });
+
   test("gallery renders real illustration images", async ({ page }) => {
     await page.goto("/en");
     await expect(page.getByTestId("triples")).toHaveText(String(EDGES.length), { timeout: 15_000 });

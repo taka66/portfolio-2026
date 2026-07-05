@@ -56,6 +56,15 @@ export function Stage({ lang }: { lang: Locale }) {
           triples <span className="stat" data-testid="triples">{triples}</span> · nodes{" "}
           <span className="stat">{NODES.length}</span> · lang <span className="stat">{lang}</span>
         </div>
+        <div className="head-links">
+          {(ENTITIES.fujii.meta ?? [])
+            .filter((m) => m.href && [":github", ":x", ":note"].includes(m.p))
+            .map((m) => (
+              <a key={m.p} href={m.href} target="_blank" rel="noopener noreferrer">
+                {m.p} ↗
+              </a>
+            ))}
+        </div>
         <Link className="profile-cta" href={lang === "ja" ? "/story" : "/en/story"} data-testid="profile-cta">
           {UI.profileButton[lang]} <span aria-hidden="true">▸</span>
         </Link>

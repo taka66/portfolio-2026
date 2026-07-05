@@ -793,6 +793,11 @@ export const UI = {
     ja: "講演、ポッドキャスト、セミナー、翻訳レビュー。出典チップを押すと、グラフの該当エンティティが開きます。",
     en: "Talks, podcasts, seminars, translation reviews. The source chip on each row opens the entity in the graph.",
   },
+  worksNoteHint: {
+    ja: "noteの記事は、別のクエリにあります",
+    en: "note articles live in a separate query",
+  },
+  worksNoteOpen: { ja: ":note をグラフで開く", en: "open :note in the graph" },
   storyKicker: { ja: "# story renderer · :fujii/profile", en: "# story renderer · :fujii/profile" },
   storySub: { ja: "Product Engineer / Designer / CTO — Tokyo", en: "Product Engineer / Designer / CTO — Tokyo" },
   storyHint: { ja: "太字に触れると、裏側の繋がりが見えます", en: "Touch any bold term to see its hidden connections" },

@@ -24,6 +24,14 @@ test.describe("?works view", () => {
     await expect(page.locator(".qrow")).toHaveCount(total);
   });
 
+  test("the note cross-link jumps to the :note entity in the graph", async ({ page }) => {
+    await page.goto("/en/works");
+    await expect(page.locator(".qxnote")).toContainText(":writes");
+    await page.locator(".qxnote a", { hasText: "open :note" }).click();
+    await expect(page).toHaveURL(/\/en\?e=note$/);
+    await expect(page.locator(".entity.open .e-uri")).toHaveText(":note");
+  });
+
   test("source chip jumps into the graph and opens the entity panel", async ({ page }) => {
     await page.goto("/en/works");
     await page.locator('.qrow .src', { hasText: ":talks" }).first().click();
