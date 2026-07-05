@@ -43,6 +43,11 @@ export async function generateMetadata(props: { params: Promise<{ lang: string }
       locale: lang === "ja" ? "ja_JP" : "en_US",
       alternateLocale: lang === "ja" ? "en_US" : "ja_JP",
       type: "website",
+      images: [{ url: "/ogp.png", width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      images: ["/ogp.png"],
     },
   };
 }

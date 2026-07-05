@@ -148,6 +148,26 @@ test.describe("locale switch from an English browser", () => {
   });
 });
 
+test.describe("seo surface", () => {
+  test("sitemap, robots, OGP image and favicon are served", async ({ page, request }) => {
+    const sitemap = await request.get("/sitemap.xml");
+    expect(sitemap.ok()).toBe(true);
+    const xml = await sitemap.text();
+    for (const route of ["/works", "/design", "/story"]) expect(xml).toContain(route);
+    expect(xml).toContain("/en/story");
+
+    const robots = await request.get("/robots.txt");
+    expect(robots.ok()).toBe(true);
+    expect(await robots.text()).toContain("Sitemap:");
+
+    await page.goto("/en");
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /ogp\.png/);
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+    expect((await request.get("/ogp.png")).ok()).toBe(true);
+    expect((await request.get("/favicon.ico")).ok()).toBe(true);
+  });
+});
+
 test.describe("mobile", () => {
   test.use({ viewport: { width: 390, height: 844 } });
 
