@@ -95,16 +95,23 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
       if (key === "all" || visible.length < 3) {
         for (const n of NODES) anchors[n.id] = n.seed as [number, number];
       } else {
-        const xs = visible.map((s) => nodeById[s.id].seed[0]);
-        const ys = visible.map((s) => nodeById[s.id].seed[1]);
-        const minX = Math.min(...xs);
-        const minY = Math.min(...ys);
-        const spanX = Math.max(...xs) - minX || 1;
-        const spanY = Math.max(...ys) - minY || 1;
-        for (const s of visible) {
-          const seed = nodeById[s.id].seed;
-          anchors[s.id] = [0.09 + 0.82 * ((seed[0] - minX) / spanX), 0.12 + 0.76 * ((seed[1] - minY) / spanY)];
-        }
+        // hub in the middle, everyone else on a ring around it — the angular
+        // order comes from the hand-placed seeds so neighborhoods survive;
+        // larger subsets interleave two radii to keep node spacing generous
+        anchors.fujii = [0.5, 0.53];
+        const f = nodeById.fujii.seed;
+        const ring = visible
+          .filter((s) => s.id !== "fujii")
+          .map((s) => ({
+            id: s.id,
+            ang: Math.atan2(nodeById[s.id].seed[1] - f[1], nodeById[s.id].seed[0] - f[0]),
+          }))
+          .sort((a, b) => a.ang - b.ang);
+        ring.forEach((n, i) => {
+          const ang = (ring[0]?.ang ?? 0) + (i / ring.length) * Math.PI * 2;
+          const k = ring.length > 10 && i % 2 === 1 ? 0.62 : 1;
+          anchors[n.id] = [0.5 + 0.4 * k * Math.cos(ang), 0.53 + 0.37 * k * Math.sin(ang)];
+        });
       }
       if (seeded) alpha = Math.max(alpha, 0.6);
     }
@@ -376,7 +383,8 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
           let score = 0;
           if (rect.x < 2) score += (2 - rect.x) * lh;
           if (rect.x + rect.w > W - 2) score += (rect.x + rect.w - W + 2) * lh;
-          if (rect.y < 2 || rect.y + rect.h > H - 2) score += 400;
+          // top zone is reserved for the WHERE chips overlay
+          if (rect.y < 56 || rect.y + rect.h > H - 2) score += 400;
           for (const o of obstacles) {
             score +=
               Math.max(0, Math.min(rect.x + rect.w, o.x + o.w) - Math.max(rect.x, o.x)) *

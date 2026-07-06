@@ -230,9 +230,11 @@ test.describe("mobile", () => {
       }
     expect(overlapping).toBe(0);
 
-    // labels stay legible: no two visible labels may mash together
+    // labels stay legible: no two visible labels may mash together,
+    // and none may hide under the WHERE chips overlay at the top
     const rects = shown.map((n) => g.labels[n.id]).filter(Boolean);
     expect(rects.length).toBe(shown.length);
+    for (const r of rects) expect(r.y).toBeGreaterThanOrEqual(54);
     let mashed = 0;
     for (let i = 0; i < rects.length; i++)
       for (let j = i + 1; j < rects.length; j++) {
