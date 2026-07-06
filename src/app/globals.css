@@ -258,14 +258,14 @@ body {
 }
 .queries button:hover,
 .queries button:focus-visible {
-  border-color: var(--amber);
-  color: var(--amber);
+  border-color: var(--qc, var(--amber));
+  color: var(--qc, var(--amber));
   outline: none;
 }
 .queries button.on {
-  border-color: var(--amber);
+  border-color: var(--qc, var(--amber));
   color: var(--bg);
-  background: var(--amber);
+  background: var(--qc, var(--amber));
 }
 
 /* ============ entity detail panel ============ */

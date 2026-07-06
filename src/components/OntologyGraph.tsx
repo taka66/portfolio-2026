@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { EDGES, ENTITIES, NODES, nodeById, type QueryId } from "@/data/ontology";
+import { EDGES, ENTITIES, NODES, QUERY_HUES, nodeById, type QueryId } from "@/data/ontology";
 
 interface GraphProps {
   visibleEdges: number;
   activeQuery: QueryId | null;
   /** query-first mode (mobile): nodes outside the active query disappear instead of dimming */
   hideOffQuery: boolean;
+  /** chip hover/activation signal: member nodes answer with one ripple in the query's hue */
+  pulse: { q: QueryId; stamp: number } | null;
   selectedId: string | null;
   onSelect: (id: string | null) => void;
   onHoverChange: (id: string | null) => void;
@@ -42,12 +44,20 @@ const SHAPES: Record<string, string> = {
 /** nodes with a full story panel get the breathing halo */
 const HAS_STORY = new Set(Object.keys(ENTITIES));
 
-export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selectedId, onSelect, onHoverChange }: GraphProps) {
+export function OntologyGraph({
+  visibleEdges,
+  activeQuery,
+  hideOffQuery,
+  pulse,
+  selectedId,
+  onSelect,
+  onHoverChange,
+}: GraphProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // live prop values readable from the single mount effect
-  const propsRef = useRef({ visibleEdges, activeQuery, hideOffQuery, selectedId, onSelect, onHoverChange });
+  const propsRef = useRef({ visibleEdges, activeQuery, hideOffQuery, pulse, selectedId, onSelect, onHoverChange });
   useEffect(() => {
-    propsRef.current = { visibleEdges, activeQuery, hideOffQuery, selectedId, onSelect, onHoverChange };
+    propsRef.current = { visibleEdges, activeQuery, hideOffQuery, pulse, selectedId, onSelect, onHoverChange };
   });
 
   useEffect(() => {
@@ -74,6 +84,10 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
     // label layout state (slot memory keeps labels from flickering)
     const labelSlots: Record<string, number> = {};
     let labelRects: Record<string, Rect> = {};
+
+    // one ripple per chip touch, answered by every member node
+    let pulseSeen = 0;
+    let pulseAnim: { q: QueryId; t0: number } | null = null;
 
     // ---- query-first filtering: the visible subset re-lays itself out ----
     const hiddenByFilter = (id: string) => {
@@ -261,7 +275,14 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
     }
 
     function draw(now: number) {
-      const { visibleEdges, activeQuery, hideOffQuery, selectedId } = propsRef.current;
+      const { visibleEdges, activeQuery, hideOffQuery, pulse, selectedId } = propsRef.current;
+
+      if (pulse && pulse.stamp !== pulseSeen) {
+        pulseSeen = pulse.stamp;
+        if (!reduced) pulseAnim = { q: pulse.q, t0: now };
+      }
+      const pulseK = pulseAnim ? (now - pulseAnim.t0) / 700 : 1;
+      if (pulseK >= 1) pulseAnim = null;
 
       // remember when each edge became visible (for the birth flash)
       if (visibleEdges > prevVisible) {
@@ -342,6 +363,29 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
           ctx!.arc(s.x, s.y, r + 5 + (reduced ? 0 : breath * 1.4), 0, Math.PI * 2);
           ctx!.strokeStyle = `rgba(255,176,0,${haloAlpha})`;
           ctx!.lineWidth = 1.2;
+          ctx!.stroke();
+        }
+
+        // genre arcs: one faint segment per saved query the node belongs to
+        if (!dimmed) {
+          const seg = (Math.PI * 2) / n.queries.length;
+          const gap = n.queries.length > 1 ? 0.3 : 0;
+          const R = r + 9;
+          n.queries.forEach((q, qi) => {
+            ctx!.beginPath();
+            ctx!.arc(s.x, s.y, R, -Math.PI / 2 + qi * seg + gap / 2, -Math.PI / 2 + (qi + 1) * seg - gap / 2);
+            ctx!.strokeStyle = `rgba(${QUERY_HUES[q]},0.28)`;
+            ctx!.lineWidth = 1.2;
+            ctx!.stroke();
+          });
+        }
+
+        // chip-touch answer: members of the asked query ripple once in its hue
+        if (pulseAnim && !dimmed && n.queries.includes(pulseAnim.q)) {
+          ctx!.beginPath();
+          ctx!.arc(s.x, s.y, r + 7 + pulseK * 20, 0, Math.PI * 2);
+          ctx!.strokeStyle = `rgba(${QUERY_HUES[pulseAnim.q]},${0.5 * (1 - pulseK)})`;
+          ctx!.lineWidth = 1.4;
           ctx!.stroke();
         }
 

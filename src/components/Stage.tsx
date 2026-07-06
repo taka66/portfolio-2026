@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { OntologyGraph } from "@/components/OntologyGraph";
 import { ParseLog } from "@/components/ParseLog";
 import { EntityPanel } from "@/components/EntityPanel";
 import Link from "next/link";
-import { DEFAULT_FOCUS, ENTITIES, NODES, SENTENCES, UI, nodeById, type QueryId } from "@/data/ontology";
+import { DEFAULT_FOCUS, ENTITIES, NODES, QUERY_HUES, SENTENCES, UI, nodeById, type QueryId } from "@/data/ontology";
 import type { Locale } from "@/i18n/config";
 
 const QUERIES: QueryId[] = ["career", "craft", "voice", "life"];
@@ -17,6 +17,14 @@ export function Stage({ lang }: { lang: Locale }) {
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [triples, setTriples] = useState(0);
   const [queryFirst, setQueryFirst] = useState(false);
+  // chip hover/activation asks the graph "which nodes are you?" — members
+  // answer with one gentle ripple in the query's hue
+  const [pulse, setPulse] = useState<{ q: QueryId; stamp: number } | null>(null);
+  const pulseCount = useRef(0);
+  const firePulse = useCallback((q: QueryId) => {
+    pulseCount.current += 1;
+    setPulse({ q, stamp: pulseCount.current });
+  }, []);
 
   // On a phone, 45 nodes are noise: start filtered to one saved query and
   // hide everything outside it (chips switch, tapping the active chip = all).
@@ -93,6 +101,7 @@ export function Stage({ lang }: { lang: Locale }) {
           visibleEdges={visibleEdges}
           activeQuery={activeQuery}
           hideOffQuery={queryFirst}
+          pulse={pulse}
           selectedId={selectedId}
           onSelect={openEntity}
           onHoverChange={setHoverId}
@@ -103,7 +112,12 @@ export function Stage({ lang }: { lang: Locale }) {
             <button
               key={q}
               className={activeQuery === q ? "on" : ""}
-              onClick={() => setActiveQuery(activeQuery === q ? null : q)}
+              style={{ "--qc": `rgb(${QUERY_HUES[q]})` } as React.CSSProperties}
+              onPointerEnter={(e) => e.pointerType === "mouse" && firePulse(q)}
+              onClick={() => {
+                setActiveQuery(activeQuery === q ? null : q);
+                firePulse(q);
+              }}
             >
               ?{q}
             </button>

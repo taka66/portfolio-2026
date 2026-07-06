@@ -14,6 +14,14 @@ import type { L10n } from "@/i18n/config";
 export type NodeClass = "person" | "role" | "org" | "artifact" | "skill" | "domain" | "hobby";
 export type QueryId = "career" | "craft" | "voice" | "life";
 
+/** phosphor-family hue per saved query, as "r,g,b" — same tube, different channel */
+export const QUERY_HUES: Record<QueryId, string> = {
+  career: "255,176,0",
+  craft: "98,199,207",
+  voice: "178,146,222",
+  life: "115,192,130",
+};
+
 export interface OntologyNode {
   id: string;
   /** mono label rendered on the canvas, e.g. ":koiki.fm" */
