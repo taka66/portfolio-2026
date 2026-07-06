@@ -175,6 +175,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "tokyolocal", p: "about", o: "tokyo" },
   { s: "fujii", p: "coFounded", o: "koikiteam" },
   { s: "koiki", p: "namedAfter", o: "koikiteam" },
+  { s: "fujii", p: "travels", o: "travel" },
   { s: "fujii", p: "reads", o: "books" },
   { s: "fujii", p: "plays", o: "basketball" },
   { s: "fujii", p: "wears", o: "fashion" },

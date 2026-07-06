@@ -368,11 +368,25 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
         const tw = ctx!.measureText(n.label).width;
         const lh = isFujii ? 13 : 11;
         const rr = d.r + 4;
+        // no left-diagonal slots: text reads left-to-right, so a long label
+        // up-left of its node starts far away and looks unowned. Above/below
+        // slots center on the node like a caption instead.
+        const cx = Math.max(3, Math.min(W - 3 - tw, d.s.x - tw / 2));
         const slotRect = (slot: number): Rect => {
-          const right = slot % 2 === 0;
-          const x = right ? d.s.x + rr + 3 : d.s.x - rr - 3 - tw;
-          const y = slot < 2 ? d.s.y - lh / 2 : slot < 4 ? d.s.y - lh - rr : d.s.y + rr;
-          return { x, y, w: tw, h: lh };
+          switch (slot) {
+            case 0:
+              return { x: d.s.x + rr + 3, y: d.s.y - lh / 2, w: tw, h: lh }; // right
+            case 1:
+              return { x: d.s.x - rr - 3 - tw, y: d.s.y - lh / 2, w: tw, h: lh }; // left
+            case 2:
+              return { x: cx, y: d.s.y - rr - lh - 1, w: tw, h: lh }; // above, centered
+            case 3:
+              return { x: cx, y: d.s.y + rr + 1, w: tw, h: lh }; // below, centered
+            case 4:
+              return { x: d.s.x + rr + 1, y: d.s.y - rr - lh, w: tw, h: lh }; // right-up
+            default:
+              return { x: d.s.x + rr + 1, y: d.s.y + rr, w: tw, h: lh }; // right-down
+          }
         };
         const order = [labelSlots[d.s.id] ?? 0, 0, 1, 2, 3, 4, 5].filter((v, i, a) => a.indexOf(v) === i);
         let best: Rect = slotRect(order[0]);
