@@ -64,6 +64,40 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
     let prevVisible = 0;
     let ripple: { x: number; y: number; t0: number } | null = null;
 
+    // ---- query-first filtering: the visible subset re-lays itself out ----
+    const hiddenByFilter = (id: string) => {
+      const { hideOffQuery, activeQuery } = propsRef.current;
+      return Boolean(hideOffQuery && activeQuery && id !== "fujii" && !nodeById[id].queries.includes(activeQuery));
+    };
+    /** per-node layout anchor (defaults to the hand-placed seed) */
+    const anchors: Record<string, [number, number]> = Object.fromEntries(
+      NODES.map((n) => [n.id, n.seed as [number, number]])
+    );
+    let filterKey = "all";
+    /** on filter change: stretch the visible subset's seeds to fill the canvas */
+    function syncFilter() {
+      const { hideOffQuery, activeQuery } = propsRef.current;
+      const key = hideOffQuery && activeQuery ? activeQuery : "all";
+      if (key === filterKey) return;
+      filterKey = key;
+      const visible = sim.filter((s) => !hiddenByFilter(s.id));
+      if (key === "all" || visible.length < 3) {
+        for (const n of NODES) anchors[n.id] = n.seed as [number, number];
+      } else {
+        const xs = visible.map((s) => nodeById[s.id].seed[0]);
+        const ys = visible.map((s) => nodeById[s.id].seed[1]);
+        const minX = Math.min(...xs);
+        const minY = Math.min(...ys);
+        const spanX = Math.max(...xs) - minX || 1;
+        const spanY = Math.max(...ys) - minY || 1;
+        for (const s of visible) {
+          const seed = nodeById[s.id].seed;
+          anchors[s.id] = [0.09 + 0.82 * ((seed[0] - minX) / spanX), 0.12 + 0.76 * ((seed[1] - minY) / spanY)];
+        }
+      }
+      if (seeded) alpha = Math.max(alpha, 0.6);
+    }
+
     let seeded = false;
 
     function applySize() {
@@ -91,10 +125,11 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
       ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       if (!seeded) {
+        syncFilter();
         for (const s of sim) {
           const seed = nodeById[s.id].seed;
-          s.x = seed[0] * W;
-          s.y = seed[1] * H;
+          s.x = Math.max(40, Math.min(W - 40, seed[0] * W));
+          s.y = Math.max(66, Math.min(H - 40, seed[1] * H));
           s.placed = true;
         }
         seeded = true;
@@ -103,10 +138,13 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
     }
 
     function tick(a: number) {
-      for (let i = 0; i < sim.length; i++) {
-        for (let j = i + 1; j < sim.length; j++) {
-          const p = sim[i];
-          const q = sim[j];
+      // filtered-out nodes freeze in place: the visible subset gets the
+      // whole canvas and settles into its own arrangement
+      const active = sim.filter((s) => !hiddenByFilter(s.id));
+      for (let i = 0; i < active.length; i++) {
+        for (let j = i + 1; j < active.length; j++) {
+          const p = active[i];
+          const q = active[j];
           let dx = q.x - p.x;
           let dy = q.y - p.y;
           const d2 = dx * dx + dy * dy || 1;
@@ -123,6 +161,7 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
         }
       }
       for (const e of EDGES) {
+        if (hiddenByFilter(e.s) || hiddenByFilter(e.o)) continue;
         const p = simById[e.s];
         const q = simById[e.o];
         const dx = q.x - p.x;
@@ -135,8 +174,8 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
         q.vx -= (dx / d) * f;
         q.vy -= (dy / d) * f;
       }
-      for (const s of sim) {
-        const seed = nodeById[s.id].seed;
+      for (const s of active) {
+        const seed = anchors[s.id];
         s.vx += (seed[0] * W - s.x) * 0.02 * a;
         s.vy += (seed[1] * H - s.y) * 0.02 * a;
         // speed cap: whatever the forces do, nodes may drift but never dart
@@ -314,6 +353,7 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
 
     function loop(now: number) {
       if (seeded) {
+        syncFilter();
         if (!reduced || dragging) tick(reduced ? 0.3 : Math.max(0.06, alpha));
         alpha *= 0.998;
         draw(now);
@@ -400,7 +440,7 @@ export function OntologyGraph({ visibleEdges, activeQuery, hideOffQuery, selecte
     (window as unknown as Record<string, unknown>).__graph = () => ({
       w: W,
       h: H,
-      nodes: sim.map((s) => ({ id: s.id, x: s.x, y: s.y, vx: s.vx, vy: s.vy })),
+      nodes: sim.map((s) => ({ id: s.id, x: s.x, y: s.y, vx: s.vx, vy: s.vy, hidden: hiddenByFilter(s.id) })),
     });
 
     applySize();
