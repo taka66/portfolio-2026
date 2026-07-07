@@ -107,6 +107,8 @@ export interface EntityItem {
   y: string;
   label: L10n;
   href?: string;
+  /** ongoing engagements pin to the top of /works, lowest number first */
+  pin?: number;
 }
 
 export interface EntityDetail {
@@ -292,6 +294,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":patents", v: "出願に関与" },
     ],
     items: [
+      { y: "2020–", pin: 1, label: { ja: "不動産管理会社、不動産オーナー向けプロダクト、オルタナティブ投資のデジタルプラットフォームの開発及び運用", en: "Developing and operating products for real estate management companies and property owners, and a digital platform for alternative investments" }, href: "https://wealth-park.com/ja/" },
       { y: "2023", label: { ja: "WealthPark Engineering Blog 開設", en: "Launched WealthPark Engineering Blog" }, href: "https://medium.com/wealthpark-engineering/on-starting-a-tech-blog-at-wealthpark-3bd84c46336" },
       { y: "2022", label: { ja: "Remote Trust - RSGT2022(Matteo Carellaと共同登壇)", en: "Remote Trust - RSGT2022 (with Matteo Carella)" }, href: "https://speakerdeck.com/taka66/remote-trust-rsgt2022-by-takahiro-fujii-matteo-carella" },
       { y: "2021", label: { ja: "グローバルなエンジニア組織を率いるVPoEの挑戦(Wantedlyインタビュー)", en: "Interview: challenges of a VP of Engineering leading a global org (Wantedly)" }, href: "https://www.wantedly.com/companies/wealth-park/post_articles/364562" },
@@ -386,7 +389,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":listen", v: "Spotify ↗", href: "https://creators.spotify.com/pod/profile/koikifm/" },
     ],
     items: [
-      { y: "2020", label: { ja: "小粋fm(Koiki.fm)を開始", en: "Koiki.fm launched" }, href: "https://creators.spotify.com/pod/profile/koikifm/" },
+      { y: "2020–", pin: 2, label: { ja: "Engineering Manager向けのPodcastを2名で運営", en: "Co-hosting a podcast for Engineering Managers" }, href: "https://creators.spotify.com/pod/profile/koikifm/" },
     ],
     rel: ["engmgmt", "illustration", "note", "koikiteam"],
   },
