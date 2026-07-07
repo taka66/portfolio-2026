@@ -42,13 +42,18 @@ export default async function TokyoArticlePage(props: { params: Promise<{ lang: 
           <div>
             <span className="c"># archived page · tokyo as a local (2016) · :lang en</span>
           </div>
+          {lang === "ja" && (
+            <div>
+              <span className="c"># 原文は英語です。この日本語はAIによる自動翻訳です</span>
+            </div>
+          )}
           <div>
             :fujii <span className="q">:made</span> :tokyo-as-a-local . :article-{article.no}{" "}
             <span className="q">:partOf</span> :tokyo-as-a-local .
           </div>
         </div>
 
-        <div className="taal-kind">{article.kind}</div>
+        <div className="taal-kind">{article.kind[lang]}</div>
         <h1 className="qtitle">{article.title}</h1>
         <div className="taal-area">{article.area} · TOKYO</div>
 
@@ -59,10 +64,10 @@ export default async function TokyoArticlePage(props: { params: Promise<{ lang: 
               <span className="tv">
                 {m.href ? (
                   <a href={m.href} target="_blank" rel="noopener noreferrer">
-                    {m.v}
+                    {m.v[lang]}
                   </a>
                 ) : (
-                  m.v
+                  m.v[lang]
                 )}
               </span>
             </div>
@@ -76,16 +81,16 @@ export default async function TokyoArticlePage(props: { params: Promise<{ lang: 
                 <Image src={b.img} alt={b.alt} width={1200} height={800} />
               </figure>
             ) : "h" in b ? (
-              <h2 key={i}>{b.h}</h2>
+              <h2 key={i}>{b.h[lang]}</h2>
             ) : (
-              <p key={i}>{b.text}</p>
+              <p key={i}>{b.text[lang]}</p>
             )
           )}
 
           {article.notes && (
             <div className="taal-notes">
               {article.notes.map((n) => (
-                <p key={n}>(NOTE) {n}</p>
+                <p key={n.en}>(NOTE) {n[lang]}</p>
               ))}
             </div>
           )}
