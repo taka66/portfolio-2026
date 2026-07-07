@@ -48,9 +48,10 @@ test.describe("ontology stage (desktop)", () => {
   test("rail exposes the external profile links", async ({ page }) => {
     await page.goto("/en");
     const links = page.locator(".head-links a");
-    await expect(links).toHaveCount(3);
+    await expect(links).toHaveCount(4);
     await expect(links.filter({ hasText: ":note" })).toHaveAttribute("href", "https://note.com/takahirofujii");
     await expect(links.filter({ hasText: ":github" })).toHaveAttribute("href", "https://github.com/taka66");
+    await expect(links.filter({ hasText: ":linkedin" })).toHaveAttribute("href", /linkedin\.com/);
   });
 
   test("gallery renders real illustration images", async ({ page }) => {

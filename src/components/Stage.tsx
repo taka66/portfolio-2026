@@ -77,7 +77,7 @@ export function Stage({ lang }: { lang: Locale }) {
         </div>
         <div className="head-links">
           {(ENTITIES.fujii.meta ?? [])
-            .filter((m) => m.href && [":github", ":x", ":note"].includes(m.p))
+            .filter((m) => m.href && [":github", ":x", ":linkedin", ":note"].includes(m.p))
             .map((m) => (
               <a key={m.p} href={m.href} target="_blank" rel="noopener noreferrer">
                 {m.p} ↗
