@@ -137,7 +137,7 @@ export const TOKYO_ARTICLES: TokyoArticle[] = [
       { img: "/tokyo/ryzm/ryzm14.jpg", alt: "Inside the shop" },
       {
         text: {
-          ja: "店内は広くはないけれど、ぎっしり。RYZM のオリジナルブランドに加えて、AKTR と AAA(AKTR All Activity)、ヴィンテージの輸入物を扱っています。まずはひと通り眺めて、気になることがあればオーナーのヒロタさんに話しかけてみてください。本当にフレンドリーな方です。",
+          ja: "店内は広くはないけれど、ぎっしり。RYZM のオリジナルブランドに加えて、AKTR と AAA(AKTR All Activity)、ヴィンテージの輸入物を扱っています。まずはひと通り眺めて、気になることがあればオーナーの広田さんに話しかけてみてください。本当にフレンドリーな方です。",
           en: "The shop is not large, but it is packed. RYZM mainly carries its own brand, plus AKTR and AAA (AKTR All Activity) and vintage imports. Look around first — and if you have any questions, talk to the owner, Hirota-san. He is genuinely friendly.",
         },
       },
