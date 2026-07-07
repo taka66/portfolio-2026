@@ -342,7 +342,7 @@ export function OntologyGraph({
 
         // past-tense facts print fainter (unless the hood spotlights them)
         const pastEdge = PAST_PREDICATES.has(e.p) || PAST_NODES.has(e.s) || PAST_NODES.has(e.o);
-        const fade = pastEdge && !inHood ? 0.55 : 1;
+        const fade = pastEdge && !inHood ? 0.4 : 1;
         const base = inHood ? 0.75 : inQuery ? 0.26 : 0.2;
         ctx!.strokeStyle =
           inHood || flash > 0
@@ -450,13 +450,15 @@ export function OntologyGraph({
             ? "#ffb000"
             : lit
               ? fadePast
-                ? "rgba(255,176,0,0.45)"
+                ? "rgba(255,176,0,0.3)"
                 : "#ffb000"
               : dimmed
                 ? "#232a33"
                 : present
                   ? "#707c8b"
-                  : "#4a525c";
+                  : fadePast
+                    ? "#3d454f"
+                    : "#4a525c";
         drawShape(s, r + (isFocus ? 2 : 0), fill, fill);
         drawn.push({ s, r, lit, dimmed, present, fadePast });
       }
@@ -529,13 +531,15 @@ export function OntologyGraph({
           ? "#ffd67a"
           : d.lit
             ? d.fadePast
-              ? "#97a1ad"
+              ? "#79838f"
               : "#e8ecf0"
             : d.dimmed
               ? "#2c333d"
               : d.present
                 ? "#aab4c0"
-                : "#727c87";
+                : d.fadePast
+                  ? "#5c6672"
+                  : "#727c87";
         ctx!.fillText(n.label, best.x, best.y + lh - 3);
       }
 
