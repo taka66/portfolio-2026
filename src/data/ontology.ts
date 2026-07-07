@@ -283,8 +283,8 @@ export const ENTITIES: Record<string, EntityDetail> = {
     type: "a :Organization",
     title: { ja: "WealthPark", en: "WealthPark" },
     desc: {
-      ja: "不動産管理会社、不動産オーナー向けプロダクト、オルタナティブ投資のデジタルプラットフォームの開発及び運用を行っています。2020年にWealthParkへ参画し、フロントエンドの開発リード、VPoE、SVPを経て、2024年より現職であるCTOに就任しました。",
-      en: "Developing and operating products for real estate management companies and property owners, as well as a digital platform for alternative investments. Joined in 2020; frontend development lead, VPoE and SVP before being appointed CTO in 2024.",
+      ja: "不動産管理会社、不動産オーナー向けプロダクトの開発及び運用を行っています。2020年にWealthParkへ参画し、フロントエンドの開発リード、VPoE、SVPを経て、2024年より現職であるCTOに就任しました。",
+      en: "Developing and operating products for real estate management companies and property owners. Joined in 2020; frontend development lead, VPoE and SVP before being appointed CTO in 2024.",
     },
     meta: [
       { p: ":since", v: "2020.01" },
@@ -294,7 +294,7 @@ export const ENTITIES: Record<string, EntityDetail> = {
       { p: ":patents", v: "出願に関与" },
     ],
     items: [
-      { y: "2020–", pin: 1, label: { ja: "不動産管理会社、不動産オーナー向けプロダクト、オルタナティブ投資のデジタルプラットフォームの開発及び運用", en: "Developing and operating products for real estate management companies and property owners, and a digital platform for alternative investments" }, href: "https://wealth-park.com/ja/" },
+      { y: "2020–", pin: 1, label: { ja: "不動産管理会社、不動産オーナー向けプロダクトの開発及び運用", en: "Developing and operating products for real estate management companies and property owners" }, href: "https://wealth-park.com/ja/" },
       { y: "2023", label: { ja: "WealthPark Engineering Blog 開設", en: "Launched WealthPark Engineering Blog" }, href: "https://medium.com/wealthpark-engineering/on-starting-a-tech-blog-at-wealthpark-3bd84c46336" },
       { y: "2022", label: { ja: "Remote Trust - RSGT2022(Matteo Carellaと共同登壇)", en: "Remote Trust - RSGT2022 (with Matteo Carella)" }, href: "https://speakerdeck.com/taka66/remote-trust-rsgt2022-by-takahiro-fujii-matteo-carella" },
       { y: "2021", label: { ja: "グローバルなエンジニア組織を率いるVPoEの挑戦(Wantedlyインタビュー)", en: "Interview: challenges of a VP of Engineering leading a global org (Wantedly)" }, href: "https://www.wantedly.com/companies/wealth-park/post_articles/364562" },
