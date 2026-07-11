@@ -229,7 +229,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "codesIn", o: "go" },
   { s: "fujii", p: "codesIn", o: "python" },
   { s: "fujii", p: "codesIn", o: "java" },
-  { s: "fujii", p: "uses", o: "react" },
+  { s: "fujii", p: "buildsWith", o: "react" },
   { s: "react", p: "with", o: "typescript", weight: 0.5 },
   { s: "fujii", p: "deploysTo", o: "vercel" },
   { s: "java", p: "usedAt", o: "rakuten" },
