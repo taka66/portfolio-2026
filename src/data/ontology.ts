@@ -55,7 +55,6 @@ export const STORIES: { id: string; steps: StoryStep[] }[] = [
     steps: [
       { s: "fujii", p: "rootedIn", o: "origins", cap: { ja: "大学時代、インターン代でAdobe一式を買った。", en: "In college, intern pay bought the full Adobe suite." } },
       { s: "illustration", p: "rootedIn", o: "origins", rev: true, cap: { ja: "描くことは、そこから始まった。", en: "Drawing grew out of that." } },
-      { s: "illustration", p: "for", o: "basketball", cap: { ja: "バスケのユニフォームは自作。", en: "The basketball uniforms: self-made." } },
       { s: "illustration", p: "brands", o: "koiki", cap: { ja: "小粋fmのロゴも、同じ手から。", en: "The Koiki.fm logo, drawn by the same hand." } },
       { s: "fujii", p: "coHosts", o: "koiki", rev: true, cap: { ja: "そのPodcastを、いまも2人で続けている。", en: "That podcast is still running, two hosts strong." } },
     ],
@@ -250,7 +249,6 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "practices", o: "hiring" },
   { s: "fujii", p: "draws", o: "illustration" },
   { s: "illustration", p: "brands", o: "koiki" },
-  { s: "illustration", p: "for", o: "basketball" },
   { s: "fujii", p: "livesIn", o: "tokyo" },
   { s: "fujii", p: "made", o: "tokyolocal" },
   { s: "tokyolocal", p: "about", o: "tokyo" },
@@ -270,7 +268,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "origins", p: "fueled", o: "engineer" },
   { s: "origins", p: "fueled", o: "uiux" },
   { s: "illustration", p: "rootedIn", o: "origins", weight: 0.5 },
-  { s: "basketball", p: "at", o: "rakuten", weight: 0.6 },
+  { s: "basketball", p: "playedAt", o: "rakuten", weight: 0.6 },
 ];
 
 // ============ instance tier (detail panels) ============
@@ -971,7 +969,6 @@ export const LOG_LINES: LogLine[] = [
   { s: ":fujii", p: ":writes", o: ":note", ghosts: [":ご機嫌でいる技術"] },
   { s: ":fujii", p: ":draws", o: ":illustration", ghosts: [":mt-fuji"] },
   { s: ":illustration", p: ":brands", o: ":koiki.fm" },
-  { s: ":illustration", p: ":for", o: ":basketball", ghosts: [":uniforms"] },
   { s: ":coffee", p: ":fueled", o: ":Engineer", ghosts: [":缶コーヒー"] },
   { s: ":fujii", p: ":wrote", o: ":desi-gneer", ghosts: [":2013-2019"] },
   { s: ":fujii", p: ":livesIn", o: ":tokyo", ghosts: [":native"] },
