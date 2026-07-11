@@ -159,6 +159,7 @@ export const NODES: OntologyNode[] = [
   { id: "java", label: ":java", cls: "skill", queries: ["craft"], seed: [0.17, 0.33] },
   { id: "react", label: ":react", cls: "skill", queries: ["craft"], seed: [0.22, 0.3] },
   { id: "aws", label: ":aws", cls: "skill", queries: ["craft"], seed: [0.12, 0.66] },
+  { id: "vercel", label: ":vercel", cls: "skill", queries: ["craft"], seed: [0.06, 0.58] },
   { id: "figma", label: ":figma", cls: "skill", queries: ["craft"], seed: [0.3, 0.78] },
   { id: "english", label: ":english", cls: "skill", queries: ["career", "voice"], seed: [0.6, 0.52] },
   { id: "budgeting", label: ":budgeting", cls: "skill", queries: ["career"], seed: [0.56, 0.64] },
@@ -231,7 +232,7 @@ export const EDGES: OntologyEdge[] = [
   { s: "fujii", p: "codesIn", o: "java" },
   { s: "fujii", p: "uses", o: "react" },
   { s: "react", p: "with", o: "typescript", weight: 0.5 },
-  { s: "fujii", p: "runsOn", o: "aws" },
+  { s: "fujii", p: "deploysTo", o: "vercel" },
   { s: "java", p: "usedAt", o: "rakuten" },
   { s: "typescript", p: "usedAt", o: "rakuten" },
   { s: "react", p: "usedAt", o: "rakuten" },
@@ -843,6 +844,10 @@ export const ENTITIES: Record<string, EntityDetail> = {
 
 /** short hover sentences for nodes without a full panel */
 export const SENTENCES: Record<string, L10n> = {
+  vercel: {
+    ja: "プライベートのアプリは<b>Vercel</b>にデプロイ。いま見ているこのサイトも、Vercelの上で動いています。",
+    en: "Private apps deploy to <b>Vercel</b> — including the site you are reading right now.",
+  },
   cto: { ja: "2024年4月からWealthParkの<b>CTO</b>。", en: "<b>CTO</b> at WealthPark since April 2024." },
   svp: { ja: "<b>SVP</b>(2023.03–2024.04)— VPoEとCTOの間の一年。", en: "<b>SVP</b> (2023.03–2024.04) — the year between VPoE and CTO." },
   vpoe: { ja: "<b>VPoE</b>(2020.04–2023.03)として多国籍組織を構築。", en: "Built a multinational org as <b>VPoE</b> (2020.04–2023.03)." },
