@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { existsSync } from "node:fs";
 import path from "node:path";
-import { EDGES, ENTITIES, LOG_LINES, NODES, STORIES, VOCAB } from "./ontology";
+import { EDGES, ENTITIES, LOG_LINES, NODES, SOURCES, STORIES, VOCAB } from "./ontology";
 import { validateOntology } from "@/lib/jsonld";
 
 describe("ontology integrity", () => {
@@ -62,6 +62,12 @@ describe("ontology integrity", () => {
     const used = new Set(EDGES.map((e) => e.p));
     for (const p of used) expect(VOCAB[p], `undeclared predicate: ${p}`).toBeDefined();
     for (const p of Object.keys(VOCAB)) expect(used.has(p), `dead vocabulary entry: ${p}`).toBe(true);
+  });
+
+  it("every provenance reference points at a declared source, and none is dead", () => {
+    const used = new Set(EDGES.flatMap((e) => e.src ?? []));
+    for (const id of used) expect(SOURCES[id], `undeclared source: ${id}`).toBeDefined();
+    for (const id of Object.keys(SOURCES)) expect(used.has(id), `dead source entry: ${id}`).toBe(true);
   });
 
   it("every story step replays a real edge", () => {

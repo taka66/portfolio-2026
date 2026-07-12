@@ -157,7 +157,28 @@ export interface OntologyEdge {
   o: string;
   /** 0-1; weak/tentative relations render thin and dashed (default 1) */
   weight?: number;
+  /** provenance: SOURCES ids backing this claim (public sources only) */
+  src?: string[];
 }
+
+/**
+ * Where the claims come from. Public sources only — anything told to this
+ * site's builder first-hand simply carries no source line (yet).
+ */
+export const SOURCES: Record<string, { label: string; href?: string }> = {
+  profile: { label: ":profile", href: "/story" },
+  "note-cto": { label: "note · WealthPark CTO就任によせて", href: "https://note.com/takahirofujii/n/nf66e8e99c53b" },
+  note: { label: "note.com/takahirofujii", href: "https://note.com/takahirofujii" },
+  "wantedly-vpoe": {
+    label: "Wantedly · VPoEインタビュー",
+    href: "https://www.wantedly.com/companies/wealth-park/post_articles/364562",
+  },
+  "spotify-koiki": { label: "Spotify · 小粋fm", href: "https://creators.spotify.com/pod/profile/koikifm/" },
+  hatena: { label: "desi-gneer(旧ブログ)", href: "https://takahiro-fujii.hatenablog.com/" },
+  sizu: { label: "sizu.me/takahiro", href: "https://sizu.me/takahiro" },
+  koikijs: { label: "koikijs.github.io", href: "https://koikijs.github.io/" },
+  taal: { label: "tokyo as a local (2016)", href: "/tokyo/streamer-coffee" },
+};
 
 export interface EntityMeta {
   p: string;
@@ -249,13 +270,13 @@ export const NODES: OntologyNode[] = [
 ];
 
 export const EDGES: OntologyEdge[] = [
-  { s: "fujii", p: "holdsRole", o: "cto" },
+  { s: "fujii", p: "holdsRole", o: "cto", src: ["note-cto", "profile"] },
   { s: "fujii", p: "heldRole", o: "svp" },
-  { s: "fujii", p: "heldRole", o: "vpoe" },
+  { s: "fujii", p: "heldRole", o: "vpoe", src: ["wantedly-vpoe", "profile"] },
   { s: "fujii", p: "holdsRole", o: "engineer" },
-  { s: "cto", p: "at", o: "wealthpark" },
+  { s: "cto", p: "at", o: "wealthpark", src: ["note-cto"] },
   { s: "svp", p: "at", o: "wealthpark" },
-  { s: "vpoe", p: "at", o: "wealthpark" },
+  { s: "vpoe", p: "at", o: "wealthpark", src: ["wantedly-vpoe"] },
   { s: "fujii", p: "heldRole", o: "em" },
   { s: "em", p: "at", o: "rakuten" },
   { s: "em", p: "involves", o: "engmgmt" },
@@ -263,17 +284,17 @@ export const EDGES: OntologyEdge[] = [
   { s: "svp", p: "involves", o: "engmgmt" },
   { s: "cto", p: "involves", o: "engmgmt" },
   { s: "cto", p: "involves", o: "llm" },
-  { s: "engineer", p: "at", o: "rakuten" },
-  { s: "engineer", p: "at", o: "wealthpark" },
+  { s: "engineer", p: "at", o: "rakuten", src: ["profile"] },
+  { s: "engineer", p: "at", o: "wealthpark", src: ["profile"] },
   { s: "fujii", p: "trainedAt", o: "goodpatch" },
   { s: "fujii", p: "studiedAt", o: "tus" },
   { s: "fujii", p: "taught", o: "afc" },
-  { s: "wealthpark", p: "inDomain", o: "realestate" },
-  { s: "wealthpark", p: "inDomain", o: "fintech" },
-  { s: "rakuten", p: "inDomain", o: "travel" },
+  { s: "wealthpark", p: "inDomain", o: "realestate", src: ["profile"] },
+  { s: "wealthpark", p: "inDomain", o: "fintech", src: ["profile"] },
+  { s: "rakuten", p: "inDomain", o: "travel", src: ["profile"] },
   { s: "afc", p: "about", o: "uiux" },
-  { s: "fujii", p: "coHosts", o: "koiki" },
-  { s: "koiki", p: "about", o: "engmgmt" },
+  { s: "fujii", p: "coHosts", o: "koiki", src: ["spotify-koiki"] },
+  { s: "koiki", p: "about", o: "engmgmt", src: ["spotify-koiki"] },
   { s: "fujii", p: "speaksAt", o: "talks" },
   { s: "talks", p: "about", o: "engmgmt" },
   { s: "fujii", p: "speaksAt", o: "seminars" },
@@ -281,11 +302,11 @@ export const EDGES: OntologyEdge[] = [
   { s: "seminars", p: "for", o: "realestate" },
   { s: "fujii", p: "reviewed", o: "reviews" },
   { s: "reviews", p: "about", o: "engmgmt" },
-  { s: "fujii", p: "writes", o: "note" },
-  { s: "fujii", p: "wrote", o: "designeer" },
-  { s: "designeer", p: "about", o: "java" },
-  { s: "designeer", p: "about", o: "travel", weight: 0.35 },
-  { s: "fujii", p: "designs", o: "uiux" },
+  { s: "fujii", p: "writes", o: "note", src: ["note"] },
+  { s: "fujii", p: "wrote", o: "designeer", src: ["hatena"] },
+  { s: "designeer", p: "about", o: "java", src: ["hatena"] },
+  { s: "designeer", p: "about", o: "travel", weight: 0.35, src: ["hatena"] },
+  { s: "fujii", p: "designs", o: "uiux", src: ["profile"] },
   { s: "uiux", p: "with", o: "figma" },
   { s: "fujii", p: "codesIn", o: "typescript" },
   { s: "fujii", p: "codesIn", o: "go" },
@@ -310,22 +331,22 @@ export const EDGES: OntologyEdge[] = [
   { s: "english", p: "fueled", o: "engmgmt", weight: 0.7 },
   { s: "fujii", p: "practices", o: "budgeting" },
   { s: "fujii", p: "practices", o: "hiring" },
-  { s: "fujii", p: "draws", o: "illustration" },
+  { s: "fujii", p: "draws", o: "illustration", src: ["profile"] },
   { s: "illustration", p: "brands", o: "koiki" },
-  { s: "fujii", p: "livesIn", o: "tokyo" },
-  { s: "fujii", p: "made", o: "tokyolocal" },
-  { s: "tokyolocal", p: "about", o: "tokyo" },
-  { s: "fujii", p: "coFounded", o: "koikiteam" },
+  { s: "fujii", p: "livesIn", o: "tokyo", src: ["taal"] },
+  { s: "fujii", p: "made", o: "tokyolocal", src: ["taal"] },
+  { s: "tokyolocal", p: "about", o: "tokyo", src: ["taal"] },
+  { s: "fujii", p: "coFounded", o: "koikiteam", src: ["koikijs"] },
   { s: "koiki", p: "namedAfter", o: "koikiteam" },
-  { s: "fujii", p: "travels", o: "travel" },
-  { s: "fujii", p: "reads", o: "books" },
-  { s: "fujii", p: "plays", o: "basketball" },
-  { s: "fujii", p: "wears", o: "fashion" },
-  { s: "fujii", p: "cooks", o: "cooking" },
-  { s: "fujii", p: "drinks", o: "coffee" },
-  { s: "fujii", p: "drinks", o: "sake" },
+  { s: "fujii", p: "travels", o: "travel", src: ["sizu"] },
+  { s: "fujii", p: "reads", o: "books", src: ["sizu"] },
+  { s: "fujii", p: "plays", o: "basketball", src: ["profile", "sizu"] },
+  { s: "fujii", p: "wears", o: "fashion", src: ["sizu"] },
+  { s: "fujii", p: "cooks", o: "cooking", src: ["profile", "sizu"] },
+  { s: "fujii", p: "drinks", o: "coffee", src: ["profile", "sizu"] },
+  { s: "fujii", p: "drinks", o: "sake", src: ["profile", "sizu"] },
   { s: "sake", p: "pairsWith", o: "cooking" },
-  { s: "fujii", p: "eats", o: "washoku" },
+  { s: "fujii", p: "eats", o: "washoku", src: ["profile"] },
   { s: "coffee", p: "fueled", o: "engineer" },
   { s: "fujii", p: "rootedIn", o: "origins" },
   { s: "origins", p: "fueled", o: "engineer" },
@@ -936,6 +957,7 @@ export const UI = {
   headGallery: { ja: "ギャラリー", en: "GALLERY" },
   headInstances: { ja: "インスタンス", en: "INSTANCES" },
   headRelated: { ja: "関連", en: "RELATED" },
+  headSources: { ja: "出典", en: "SOURCES" },
   legend: {
     ja: "● 人物 / 役職 ■ 組織 ▲ 制作物|◆ スキル ○ 領域 · 趣味",
     en: "● person / role ■ org ▲ artifact|◆ skill ○ domain · hobby",

@@ -46,7 +46,11 @@ export function buildTurtle(): string {
 
   lines.push("", "# ---- triples ----");
   for (const e of EDGES) {
-    lines.push(`:${e.s} :${e.p} :${e.o} .${e.weight !== undefined ? ` # weight ${e.weight}` : ""}`);
+    const notes = [
+      ...(e.weight !== undefined ? [`weight ${e.weight}`] : []),
+      ...(e.src ? [`src: ${e.src.join(", ")}`] : []),
+    ];
+    lines.push(`:${e.s} :${e.p} :${e.o} .${notes.length ? ` # ${notes.join(" · ")}` : ""}`);
   }
 
   lines.push("", "# graph committed");

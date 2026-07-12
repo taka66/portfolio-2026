@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { EDGES, ENTITIES, UI, nodeById } from "@/data/ontology";
+import { EDGES, ENTITIES, SOURCES, UI, nodeById } from "@/data/ontology";
 import type { Locale } from "@/i18n/config";
 
 interface EntityPanelProps {
@@ -19,6 +19,11 @@ export function EntityPanel({ entityId, lang, onClose, onOpen }: EntityPanelProp
     href.startsWith("/")
       ? { href: lang === "en" ? `/en${href}` : href }
       : { href, target: "_blank", rel: "noopener noreferrer" };
+
+  // provenance: the public sources behind every claim touching this node
+  const sourceIds = node
+    ? [...new Set(EDGES.filter((e) => (e.s === node.id || e.o === node.id) && e.src).flatMap((e) => e.src!))]
+    : [];
 
   return (
     <aside className={`entity${node ? " open" : ""}`} aria-label="entity detail" aria-hidden={!node}>
@@ -98,6 +103,19 @@ export function EntityPanel({ entityId, lang, onClose, onOpen }: EntityPanelProp
                         </button>
                       ))}
                     </div>
+                  </div>
+                )}
+                {sourceIds.length > 0 && (
+                  <div className="e-sec e-src">
+                    <h3>{UI.headSources[lang]}</h3>
+                    {sourceIds.map((id) => {
+                      const s = SOURCES[id];
+                      return (
+                        <div className="s-row" key={id}>
+                          {s.href ? <a {...linkProps(s.href)}>{s.label} ↗</a> : s.label}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </>
